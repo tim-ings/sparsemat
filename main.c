@@ -81,6 +81,9 @@ int readfile(const char* fileName) {
     float sum = matcoo_trace(matcoo);
     printf("\nTrace COO: %.2f\n", sum);
 
+    sum = matcsr_trace(matcsr);
+    printf("\nTrace CSR: %.2f\n", sum);
+
     printf("\nSM COO * 10.0f:\n");
     matcoo = matcoo_sm(matcoo, 10.0f);
     matcoo_print(matcoo);
