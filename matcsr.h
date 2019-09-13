@@ -9,6 +9,7 @@ typedef struct matcsr_ matcsr;
 struct matcsr_ {
     float* nnz; // The non-zero values stored in row-major
                 // order (left to right, top to bottom)
+    int nnz_length;
     float* ia;  // The number of elements in each row. An extra element IA[0] = 0 is
                 // used by convention. This array can be used to index into the NNZ array for each i-th row
     float* ja;  // Stores the column index of each non-zero element

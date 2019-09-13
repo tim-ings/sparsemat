@@ -68,17 +68,27 @@ int readfile(const char* fileName) {
     if (line)
         free(line);
 
+    printf("\nNEW COO:\n");
     matcoo* matcoo = matcoo_new(data, dimX, dimY);
+    matcoo_print(matcoo);
+    printf("\nNEW CSR:\n");
     matcsr* matcsr = matcsr_new(data, dimX, dimY);
+    matcsr_print(matcsr);
+    printf("\nNEW CSC:\n");
     matcsc* matcsc = matcsc_new(data, dimX, dimY);
+    matcsc_print(matcsc);
 
-    printf("\nCOO:\n");
+    printf("\nSM COO * 10.0f:\n");
     matcoo = matcoo_sm(matcoo, 10.0f);
     matcoo_print(matcoo);
 
-    printf("\nCSR:\n");
+    printf("\nSM CSR * 10.0f:\n");
     matcsr = matcsr_sm(matcsr, 10.0f);
     matcsr_print(matcsr);
+
+    printf("\nSM CSC * 10.0f:\n");
+    matcsc = matcsc_sm(matcsc, 10.0f);
+    matcsc_print(matcsc);
 
     return 0;
 }

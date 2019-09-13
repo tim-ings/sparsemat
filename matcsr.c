@@ -60,6 +60,7 @@ matcsr* matcsr_new(const float* data, int dimX, int dimY) {
         }
 #endif
     }
+    m->nnz_length = i;
 #ifdef DEBUG_VERBOSE
     printf("]...\n");
 #endif
@@ -140,7 +141,7 @@ void matcsr_print(matcsr* m) {
 }
 
 matcsr* matcsr_sm(matcsr* m, float s) {
-    for (int i = 0; i < m->dimX * m->dimY; i++) {
+    for (int i = 0; i < m->nnz_length; i++) {
         m->nnz[i] *= s;
     }
     return m;
