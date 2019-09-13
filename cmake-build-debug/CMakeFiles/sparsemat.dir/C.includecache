@@ -10,11 +10,11 @@
 stdlib.h
 -
 
-/Users/tim/repo/sparsemat/matcsr.c
-matcsr.h
-/Users/tim/repo/sparsemat/matcsr.h
+/Users/tim/repo/sparsemat/matcsc.c
+matcsc.h
+/Users/tim/repo/sparsemat/matcsc.h
 
-/Users/tim/repo/sparsemat/matcsr.h
+/Users/tim/repo/sparsemat/matcsc.h
 stdlib.h
 -
 stdio.h

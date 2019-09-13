@@ -146,3 +146,28 @@ matcsc* matcsc_sm(matcsc* m, float s) {
     }
     return m;
 }
+
+float matcsc_trace(matcsc* m) {
+    float sum = 0;
+    int next_val_i = 0;
+    int els_so_far_i = 1;
+    int next_row_index_i = 0;
+    float next_val = m->nnz[next_val_i++];
+    int els_so_far = (int)m->ia[els_so_far_i++];
+    int next_row_index = (int)m->ja[next_row_index_i++];
+    int vals_this_col = 0;
+    for (int j = 0; j < m->dimX; j++) {
+        for (int i = 0; i < m->dimY; i++) {
+            if (vals_this_col < els_so_far && i == next_row_index) {
+                if (i == j) {
+                    sum += next_val;
+                }
+                next_val = m->nnz[next_val_i++];
+                next_row_index = (int)m->ja[next_row_index_i++];
+                vals_this_col++;
+            }
+        }
+        els_so_far = (int)m->ia[els_so_far_i++];
+    }
+    return sum;
+}

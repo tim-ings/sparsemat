@@ -20,5 +20,6 @@ struct matcsc_ {
 matcsc* matcsc_new(const float* data, int dimX, int dimY);
 matcsc* matcsc_sm(matcsc* m, float s);
 void matcsc_print(matcsc* m);
+float matcsc_trace(matcsc* m);
 
 #endif //SPARSEMAT_MATCSC_H
