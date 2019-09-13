@@ -22,4 +22,4 @@ matcsc* matcsc_sm(matcsc* m, float s);
 void matcsc_print(matcsc* m);
 float matcsc_trace(matcsc* m);
 
-#endif //SPARSEMAT_MATCSC_H
+#endif SPARSEMAT_MATCSC_H

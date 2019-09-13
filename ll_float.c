@@ -7,8 +7,8 @@ void ll_float_push(ll_float* list, float value) {
     new_node->next = NULL;
     new_node->value = value;
     if (list->length > 0) {
-        list->last->next = new_node;
         new_node->prev = list->last;
+        list->last->next = new_node;
         list->last = new_node;
     } else {
         list->last = new_node;
@@ -19,7 +19,11 @@ void ll_float_push(ll_float* list, float value) {
 }
 
 ll_float* ll_float_new() {
-    return (ll_float*)malloc(sizeof(ll_float));
+    ll_float* list = (ll_float*)malloc(sizeof(ll_float));
+    list->length = 0;
+    list->first = NULL;
+    list->last = NULL;
+    return list;
 }
 
 ll_float_node* ll_float_get(ll_float* list, int index) {

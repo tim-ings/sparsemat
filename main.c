@@ -1,11 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ll_float.h"
+#include <time.h>
+#include <stdbool.h>
 #include "matcoo.h"
 #include "matcsr.h"
 #include "matcsc.h"
 
+
+#define LOAD_COUNT 1
+#define ITT_COUNT 1500000
+#define ITT_COUNT_BIG ITT_COUNT * 100
+
+#define TEST_SM 0
+#define TEST_TR 0
+#define TEST_AD 1
+#define TEST_TS 0
+#define TEST_MM 0
+
+
+
+struct timespec tstart={0,0}, tend={0,0};
+
+void timer_start() {
+    clock_gettime(CLOCK_MONOTONIC, &tstart);
+}
+
+float timer_end() {
+    clock_gettime(CLOCK_MONOTONIC, &tend);
+    return ((double)tend.tv_sec + 1.0e-9*tend.tv_nsec) - ((double)tstart.tv_sec + 1.0e-9*tstart.tv_nsec);
+}
 
 int readfile(const char* fileName) {
     char* line = NULL;
@@ -49,6 +73,9 @@ int readfile(const char* fileName) {
                 }
                 break;
             }
+            default: {
+                printf("Unexpected line in %s, ignoring it\n", fileName);
+            }
         }
         counter++;
     }
@@ -62,42 +89,110 @@ int readfile(const char* fileName) {
     }
     printf("\n");
 #endif
-    printf("%f\n", data[0]);
 
-    fclose(fp);
-    if (line)
-        free(line);
+    /*
+     * LOAD MATRICES
+     */
+    matcoo* mcoo;
+    timer_start();
+    for (int i = 0; i < LOAD_COUNT; i++) {
+        mcoo = matcoo_new(data, dimX, dimY);
+    }
+    float elapsed = timer_end();
+    printf("Loaded %d COO matrices in %.5fs\n", LOAD_COUNT, elapsed);
+    matcoo_print(mcoo);
 
-    printf("\nNEW COO:\n");
-    matcoo* matcoo = matcoo_new(data, dimX, dimY);
-    matcoo_print(matcoo);
-    printf("\nNEW CSR:\n");
-    matcsr* matcsr = matcsr_new(data, dimX, dimY);
-    matcsr_print(matcsr);
-    printf("\nNEW CSC:\n");
-    matcsc* matcsc = matcsc_new(data, dimX, dimY);
-    matcsc_print(matcsc);
+    matcsr* mcsr;
+    timer_start();
+    for (int i = 0; i < LOAD_COUNT; i++) {
+        mcsr = matcsr_new(data, dimX, dimY);
+    }
+    elapsed = timer_end();
+    printf("Loaded %d CSR matrices in %.5fs\n", LOAD_COUNT, elapsed);
+    matcsr_print(mcsr);
 
-    float sum = matcoo_trace(matcoo);
-    printf("\nTrace COO: %.2f\n", sum);
+    matcsc* mcsc;
+    timer_start();
+    for (int i = 0; i < LOAD_COUNT; i++) {
+        mcsc = matcsc_new(data, dimX, dimY);
+    }
+    elapsed = timer_end();
+    printf("Loaded %d CSC matrices in %.5fs\n", LOAD_COUNT, elapsed);
+    matcsc_print(mcsc);
 
-    sum = matcsr_trace(matcsr);
-    printf("\nTrace CSR: %.2f\n", sum);
+    /*
+     * CALCULATE TRACE
+     */
+    if (TEST_TR) {
+        float sum;
+        timer_start();
+        for (int i = 0; i < ITT_COUNT_BIG; i++) {
+            sum = matcoo_trace(mcoo);
+        }
+        elapsed = timer_end();
+        printf("Calculated trace of %d COO matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
+        printf("Trace COO: %.2f\n", sum);
 
-    sum = matcsc_trace(matcsc);
-    printf("\nTrace CSC: %.2f\n", sum);
+        timer_start();
+        for (int i = 0; i < ITT_COUNT_BIG; i++) {
+            sum = matcsr_trace(mcsr);
+        }
+        elapsed = timer_end();
+        printf("Calculated trace of %d CSR matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
+        printf("Trace CSR: %.2f\n", sum);
 
-    printf("\nSM COO * 10.0f:\n");
-    matcoo = matcoo_sm(matcoo, 10.0f);
-    matcoo_print(matcoo);
+        timer_start();
+        for (int i = 0; i < ITT_COUNT_BIG; i++) {
+            sum = matcsc_trace(mcsc);
+        }
+        elapsed = timer_end();
+        printf("Calculated trace of %d CSC matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
+        printf("Trace CSC: %.2f\n", sum);
+    }
 
-    printf("\nSM CSR * 10.0f:\n");
-    matcsr = matcsr_sm(matcsr, 10.0f);
-    matcsr_print(matcsr);
+    /*
+     * CALCULATE SCALAR MULTIPLE
+     */
+    if (TEST_SM) {
+        int sm_count = (ITT_COUNT % 2 == 0) ? ((ITT_COUNT_BIG) + 1) : (ITT_COUNT_BIG);
+        timer_start();
+        for (int i = 0; i < sm_count; i++) {
+            mcoo = matcoo_sm(mcoo, (i % 2 == 0) ? (10.0f) : (1.0f / 10.0f));
+        }
+        elapsed = timer_end();
+        printf("Calculated scalar multiple of %d COO matrices in %.5fs\n", sm_count, elapsed);
+        matcoo_print(mcoo);
 
-    printf("\nSM CSC * 10.0f:\n");
-    matcsc = matcsc_sm(matcsc, 10.0f);
-    matcsc_print(matcsc);
+        timer_start();
+        for (int i = 0; i < sm_count; i++) {
+            mcsr = matcsr_sm(mcsr, i % 2 == 0 ? 10.0f : 1.0f / 10.0f);
+        }
+        elapsed = timer_end();
+        printf("Calculated scalar multiple of %d CSR matrices in %.5fs\n", sm_count, elapsed);
+        matcsr_print(mcsr);
+
+        timer_start();
+        for (int i = 0; i < sm_count; i++) {
+            mcsc = matcsc_sm(mcsc, i % 2 == 0 ? 10.0f : 1.0f / 10.0f);
+        }
+        elapsed = timer_end();
+        printf("Calculated scalar multiple of %d CSC matrices in %.5fs\n", sm_count, elapsed);
+        matcsr_print(mcsr);
+    }
+
+    if (TEST_AD) {
+        printf("Adding m1 and m2:\n");
+        matcoo_print(mcoo);
+        printf("+\n");
+        matcoo_print(mcoo);
+        printf("=\n");
+        matcoo* mad = matcoo_add(mcoo, mcoo);
+        matcoo_print(mad);
+    }
+
+//    fclose(fp);
+//    if (line)
+//        free(line);
 
     return 0;
 }

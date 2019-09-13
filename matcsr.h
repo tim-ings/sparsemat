@@ -23,4 +23,4 @@ float matcsr_trace(matcsr* m);
 void matcsr_print(matcsr* m);
 
 
-#endif //SPARSEMAT_MATCSR_H
+#endif SPARSEMAT_MATCSR_H
