@@ -123,6 +123,33 @@ sparsemat/fast:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/build
 .PHONY : sparsemat/fast
 
+ll_float.o: ll_float.c.o
+
+.PHONY : ll_float.o
+
+# target to build an object file
+ll_float.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_float.c.o
+.PHONY : ll_float.c.o
+
+ll_float.i: ll_float.c.i
+
+.PHONY : ll_float.i
+
+# target to preprocess a source file
+ll_float.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_float.c.i
+.PHONY : ll_float.c.i
+
+ll_float.s: ll_float.c.s
+
+.PHONY : ll_float.s
+
+# target to generate assembly for a file
+ll_float.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_float.c.s
+.PHONY : ll_float.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -150,6 +177,87 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/main.c.s
 .PHONY : main.c.s
 
+matcoo.o: matcoo.c.o
+
+.PHONY : matcoo.o
+
+# target to build an object file
+matcoo.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo.c.o
+.PHONY : matcoo.c.o
+
+matcoo.i: matcoo.c.i
+
+.PHONY : matcoo.i
+
+# target to preprocess a source file
+matcoo.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo.c.i
+.PHONY : matcoo.c.i
+
+matcoo.s: matcoo.c.s
+
+.PHONY : matcoo.s
+
+# target to generate assembly for a file
+matcoo.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo.c.s
+.PHONY : matcoo.c.s
+
+matcsc.o: matcsc.c.o
+
+.PHONY : matcsc.o
+
+# target to build an object file
+matcsc.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc.c.o
+.PHONY : matcsc.c.o
+
+matcsc.i: matcsc.c.i
+
+.PHONY : matcsc.i
+
+# target to preprocess a source file
+matcsc.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc.c.i
+.PHONY : matcsc.c.i
+
+matcsc.s: matcsc.c.s
+
+.PHONY : matcsc.s
+
+# target to generate assembly for a file
+matcsc.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc.c.s
+.PHONY : matcsc.c.s
+
+matcsr.o: matcsr.c.o
+
+.PHONY : matcsr.o
+
+# target to build an object file
+matcsr.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr.c.o
+.PHONY : matcsr.c.o
+
+matcsr.i: matcsr.c.i
+
+.PHONY : matcsr.i
+
+# target to preprocess a source file
+matcsr.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr.c.i
+.PHONY : matcsr.c.i
+
+matcsr.s: matcsr.c.s
+
+.PHONY : matcsr.s
+
+# target to generate assembly for a file
+matcsr.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr.c.s
+.PHONY : matcsr.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +267,21 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... sparsemat"
+	@echo "... ll_float.o"
+	@echo "... ll_float.i"
+	@echo "... ll_float.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... matcoo.o"
+	@echo "... matcoo.i"
+	@echo "... matcoo.s"
+	@echo "... matcsc.o"
+	@echo "... matcsc.i"
+	@echo "... matcsc.s"
+	@echo "... matcsr.o"
+	@echo "... matcsr.i"
+	@echo "... matcsr.s"
 .PHONY : help
 
 

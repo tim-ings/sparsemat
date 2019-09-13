@@ -78,7 +78,31 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/tim/repo/sparsemat/ll_float.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/ll_float.h">
+			<Option target="sparsemat"/>
+		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/main.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcoo.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcoo.h">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsc.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsc.h">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsr.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsr.h">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/CMakeLists.txt">

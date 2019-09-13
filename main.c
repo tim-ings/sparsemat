@@ -1,8 +1,11 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
+#include "ll_float.h"
+#include "matcoo.h"
+#include "matcsr.h"
+#include "matcsc.h"
+
 
 int readfile(const char* fileName) {
     char* line = NULL;
@@ -13,8 +16,8 @@ int readfile(const char* fileName) {
         printf("File does not exist: %s", fileName);
         return 1;
     }
-    float dimX = -1;
-    float dimY = -1;
+    int dimX = -1;
+    int dimY = -1;
     float* data = NULL;
     int counter = 0;
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -25,11 +28,11 @@ int readfile(const char* fileName) {
                 break;
             }
             case 1: {
-                dimX = (float)strtod(line, NULL);
+                dimX = (int)strtol(line, NULL, 10);
                 break;
             }
             case 2: {
-                dimY = (float)strtod(line, NULL);
+                dimY = (int)strtol(line, NULL, 10);
                 data = (float*)malloc(sizeof(float) * dimX * dimY);
                 break;
             }
@@ -48,36 +51,25 @@ int readfile(const char* fileName) {
         counter++;
     }
 
-    printf("DIM X = '%f'\n", dimX);
-    printf("DIM Y = '%f'\n", dimY);
+    printf("DIM X = '%d'\n", dimX);
+    printf("DIM Y = '%d'\n", dimY);
 
     for (int i = 0; i < dimX * dimY; i++) {
         printf("%f, ", data[i]);
     }
+    printf("\n");
+    printf("\n");
 
     fclose(fp);
     if (line)
         free(line);
 
+    matcoo* matcoo = matcoo_new(data, dimX, dimY);
+    matcsr* matcsr = matcsr_new(data, dimX, dimY);
+    matcsc* matcsc = matcsc_new(data, dimX, dimY);
     return 0;
 }
 
-int main(int argc, char *argv[])
-{
-//    bool isCaseInsensitive = false;
-//    int opt;
-//    enum { CHARACTER_MODE, WORD_MODE, LINE_MODE } mode = CHARACTER_MODE;
-//
-//    while ((opt = getopt(argc, argv, "ilw")) != -1) {
-//        switch (opt) {
-//            case 'i': isCaseInsensitive = true; break;
-//            case 'l': mode = LINE_MODE; break;
-//            case 'w': mode = WORD_MODE; break;
-//            default:
-//                fprintf(stderr, "Usage: %s [-ilw] [file...]\n", argv[0]);
-//                exit(EXIT_FAILURE);
-//        }
-//    }
-
-    readfile("../data/float1.in");
+int main(int argc, char *argv[]) {
+    readfile("data/float1.in");
 }

@@ -4,7 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/Users/tim/repo/sparsemat/ll_float.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/ll_float.c.o"
   "/Users/tim/repo/sparsemat/main.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/main.c.o"
+  "/Users/tim/repo/sparsemat/matcoo.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/matcoo.c.o"
+  "/Users/tim/repo/sparsemat/matcsc.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/matcsc.c.o"
+  "/Users/tim/repo/sparsemat/matcsr.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/matcsr.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 
