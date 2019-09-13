@@ -2,12 +2,16 @@
 
 
 matcoo* matcoo_new(const float* data, int dimX, int dimY) {
+#ifdef DEBUG_VERBOSE
     printf("\nBuilding new %dx%d COO matrix\n[ ", dimX, dimY);
+#endif
     ll_float* coords_val = ll_float_new();
     ll_float* coords_i = ll_float_new();
     ll_float* coords_j = ll_float_new();
     int stride = dimY;
+#ifdef DEBUG_VERBOSE
     int prints_so_far = 0;
+#endif
     for (int i = 0; i < dimY; i++) {
         for (int j = 0; j < dimX; j++) {
             float val = data[i * stride + j];
@@ -15,10 +19,12 @@ matcoo* matcoo_new(const float* data, int dimX, int dimY) {
                 ll_float_push(coords_val, val);
                 ll_float_push(coords_i, (float)i);
                 ll_float_push(coords_j, (float)j);
+#ifdef DEBUG_VERBOSE
                 if (prints_so_far < PRINT_COUNT_MAX / 1.5) {
                     printf("(%d, %d, %.2f), ", j, i, val);
                     prints_so_far++;
                 }
+#endif
             }
         }
     }
@@ -33,7 +39,9 @@ matcoo* matcoo_new(const float* data, int dimX, int dimY) {
     m->coords_i = coords_i;
     m->coords_j = coords_j;
 
+#ifdef DEBUG_VERBOSE
     printf("]...\n%dx%d COO matrix built\n", dimX, dimY);
+#endif
     return m;
 }
 
@@ -53,12 +61,12 @@ void matcoo_print(matcoo* m) {
     for (int i = 0; i < m->dimY; i++) {
         for (int j = 0; j < m->dimY; j++) {
             if (i == (int)cur_i->value && j == (int)cur_j->value) {
-                printf("%.2f   ", cur_val->value);
+                printf("%.2f\t\t", cur_val->value);
                 cur_val = cur_val->next;
                 cur_i = cur_i->next;
                 cur_j = cur_j->next;
             } else {
-                printf("0.00   ");
+                printf("0.00\t\t");
             }
         }
         printf("\n");

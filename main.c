@@ -21,7 +21,9 @@ int readfile(const char* fileName) {
     float* data = NULL;
     int counter = 0;
     while ((read = getline(&line, &len, fp)) != -1) {
+#ifdef DEBUG_VERBOSE
         printf("Retrieved line of length %zu\n", read);
+#endif
         line[read - 1] = '\0';
         switch (counter) {
             case 0: {
@@ -51,6 +53,7 @@ int readfile(const char* fileName) {
         counter++;
     }
 
+#ifdef DEBUG_VERBOSE
     printf("DIM X = '%d'\n", dimX);
     printf("DIM Y = '%d'\n", dimY);
 
@@ -58,24 +61,23 @@ int readfile(const char* fileName) {
         printf("%f, ", data[i]);
     }
     printf("\n");
-    printf("\n");
+#endif
+    printf("%f\n", data[0]);
 
     fclose(fp);
     if (line)
         free(line);
 
     matcoo* matcoo = matcoo_new(data, dimX, dimY);
-    matcoo_print(matcoo);
-
     matcsr* matcsr = matcsr_new(data, dimX, dimY);
-    matcsr_print(matcsr);
-
     matcsc* matcsc = matcsc_new(data, dimX, dimY);
-    matcsc_print(matcsc);
+
+    matcoo = matcoo_sm(matcoo, 10.0f);
+    matcoo_print(matcoo);
     return 0;
 }
 
 int main(int argc, char *argv[]) {
     readfile("data/float1.in");
-    printf("\n");
+    return 0;
 }
