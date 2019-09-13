@@ -22,15 +22,3 @@ stdio.h
 ll_float.h
 /Users/tim/repo/sparsemat/ll_float.h
 
-/Users/tim/repo/sparsemat/matcsr.c
-matcsr.h
-/Users/tim/repo/sparsemat/matcsr.h
-
-/Users/tim/repo/sparsemat/matcsr.h
-stdlib.h
--
-stdio.h
--
-ll_float.h
-/Users/tim/repo/sparsemat/ll_float.h
-

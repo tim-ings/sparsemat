@@ -71,5 +71,5 @@ int readfile(const char* fileName) {
 }
 
 int main(int argc, char *argv[]) {
-    readfile("data/float1.in");
+    readfile("data/float64.in");
 }

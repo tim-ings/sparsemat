@@ -2,6 +2,8 @@
 #define SPARSEMAT_LL_FLOAT_H
 #include <stdlib.h>
 
+#define PRINT_COUNT_MAX 15
+
 typedef struct ll_float_ ll_float;
 typedef struct ll_float_node_ ll_float_node;
 
