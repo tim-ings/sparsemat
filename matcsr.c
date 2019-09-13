@@ -138,3 +138,10 @@ void matcsr_print(matcsr* m) {
         printf("\n");
     }
 }
+
+matcsr* matcsr_sm(matcsr* m, float s) {
+    for (int i = 0; i < m->dimX * m->dimY; i++) {
+        m->nnz[i] *= s;
+    }
+    return m;
+}

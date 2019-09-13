@@ -72,8 +72,14 @@ int readfile(const char* fileName) {
     matcsr* matcsr = matcsr_new(data, dimX, dimY);
     matcsc* matcsc = matcsc_new(data, dimX, dimY);
 
+    printf("\nCOO:\n");
     matcoo = matcoo_sm(matcoo, 10.0f);
     matcoo_print(matcoo);
+
+    printf("\nCSR:\n");
+    matcsr = matcsr_sm(matcsr, 10.0f);
+    matcsr_print(matcsr);
+
     return 0;
 }
 

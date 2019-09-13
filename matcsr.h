@@ -17,6 +17,8 @@ struct matcsr_ {
 };
 
 matcsr* matcsr_new(const float* data, int dimX, int dimY);
+matcsr* matcsr_sm(matcsr* m, float s);
 void matcsr_print(matcsr* m);
+
 
 #endif //SPARSEMAT_MATCSR_H
