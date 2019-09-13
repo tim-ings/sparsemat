@@ -78,6 +78,9 @@ int readfile(const char* fileName) {
     matcsc* matcsc = matcsc_new(data, dimX, dimY);
     matcsc_print(matcsc);
 
+    float sum = matcoo_trace(matcoo);
+    printf("\nTrace COO: %.2f\n", sum);
+
     printf("\nSM COO * 10.0f:\n");
     matcoo = matcoo_sm(matcoo, 10.0f);
     matcoo_print(matcoo);

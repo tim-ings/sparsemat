@@ -14,6 +14,7 @@ struct matcoo_ {
 
 matcoo* matcoo_new(const float* data, int dimX, int dimY);
 matcoo* matcoo_sm(matcoo* m, float s);
+float matcoo_trace(matcoo* m);
 void matcoo_print(matcoo* m);
 
 #endif //SPARSEMAT_MATCOO_H
