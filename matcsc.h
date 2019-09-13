@@ -12,8 +12,11 @@ struct matcsc_ {
     float* ia;  // The number of elements in each column. An extra element IA[0] = 0 is
                 // used by convention. This array can be used to index into the NNZ array for each i-th column
     float* ja;  // Stores the row index of each non-zero element
+    int dimX;
+    int dimY;
 };
 
 matcsc* matcsc_new(const float* data, int dimX, int dimY);
+void matcsc_print(matcsc* m);
 
 #endif //SPARSEMAT_MATCSC_H

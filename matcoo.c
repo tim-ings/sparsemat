@@ -36,3 +36,31 @@ matcoo* matcoo_new(const float* data, int dimX, int dimY) {
     printf("]...\n%dx%d COO matrix built\n", dimX, dimY);
     return m;
 }
+
+matcoo* matcoo_sm(matcoo* m, float s) {
+    ll_float_node* cur_val = m->coords_val->first;
+    while (cur_val->next != NULL) {
+        cur_val->value *= s;
+        cur_val = cur_val->next;
+    }
+    return m;
+}
+
+void matcoo_print(matcoo* m) {
+    ll_float_node* cur_val = m->coords_val->first;
+    ll_float_node* cur_i = m->coords_i->first;
+    ll_float_node* cur_j = m->coords_j->first;
+    for (int i = 0; i < m->dimY; i++) {
+        for (int j = 0; j < m->dimY; j++) {
+            if (i == (int)cur_i->value && j == (int)cur_j->value) {
+                printf("%.2f   ", cur_val->value);
+                cur_val = cur_val->next;
+                cur_i = cur_i->next;
+                cur_j = cur_j->next;
+            } else {
+                printf("0.00   ");
+            }
+        }
+        printf("\n");
+    }
+}

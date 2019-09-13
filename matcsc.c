@@ -20,7 +20,7 @@ matcsc* matcsc_new(const float* data, int dimX, int dimY) {
                 ll_float_push(col_indices, (float)j);
                 els_so_far++;
                 if (prints_so_far < PRINT_COUNT_MAX / 4) {
-                    printf("{ nzv: %f, els_so_far: %d, col_index: %d }, ", val, els_so_far, j);
+                    printf("{ nzv: %.2f, els_so_far: %d, col_index: %d }, ", val, els_so_far, j);
                     prints_so_far++;
                 }
             }
@@ -30,6 +30,8 @@ matcsc* matcsc_new(const float* data, int dimX, int dimY) {
     printf("...\n");
 
     matcsc* m = (matcsc*)malloc(sizeof(matcsc));
+    m->dimX = dimX;
+    m->dimY = dimY;
 
     // transform linked list into array
     m->nnz = malloc(sizeof(float) * nzlist->length);
@@ -85,4 +87,28 @@ matcsc* matcsc_new(const float* data, int dimX, int dimY) {
 
     printf("]...\n%dx%d CSC matrix built\n", dimX, dimY);
     return m;
+}
+
+void matcsc_print(matcsc* m) {
+    int next_val_i = 0;
+    int els_so_far_i = 1;
+    int next_row_index_i = 0;
+    float next_val = m->nnz[next_val_i++];
+    int els_so_far = (int)m->ia[els_so_far_i++];
+    int next_row_index = (int)m->ja[next_row_index_i++];
+    int vals_this_col = 0;
+    for (int j = 0; j < m->dimX; j++) {
+        for (int i = 0; i < m->dimY; i++) {
+            if (vals_this_col < els_so_far && i == next_row_index) {
+                printf("%.2f   ", next_val);
+                next_val = m->nnz[next_val_i++];
+                next_row_index = (int)m->ja[next_row_index_i++];
+                vals_this_col++;
+            } else {
+                printf("0.00   ");
+            }
+        }
+        els_so_far = (int)m->ia[els_so_far_i++];
+        printf("\n");
+    }
 }

@@ -20,7 +20,7 @@ matcsr* matcsr_new(const float* data, int dimX, int dimY) {
                 ll_float_push(col_indices, (float)j);
                 els_so_far++;
                 if (prints_so_far < PRINT_COUNT_MAX / 4) {
-                    printf("{ nzv: %f, els_so_far: %d, col_index: %d }, ", val, els_so_far, j);
+                    printf("{ nzv: %.2f, els_so_far: %d, col_index: %d }, ", val, els_so_far, j);
                     prints_so_far++;
                 }
             }
@@ -30,6 +30,8 @@ matcsr* matcsr_new(const float* data, int dimX, int dimY) {
     printf("...\n");
 
     matcsr* m = (matcsr*)malloc(sizeof(matcsr));
+    m->dimX = dimX;
+    m->dimY = dimY;
 
     // transform linked list into array
     m->nnz = malloc(sizeof(float) * nzlist->length);
@@ -85,4 +87,28 @@ matcsr* matcsr_new(const float* data, int dimX, int dimY) {
 
     printf("]...\n%dx%d CSR matrix built\n", dimX, dimY);
     return m;
+}
+
+void matcsr_print(matcsr* m) {
+    int next_val_i = 0;
+    int els_so_far_i = 1;
+    int next_col_index_i = 0;
+    float next_val = m->nnz[next_val_i++];
+    int els_so_far = (int)m->ia[els_so_far_i++];
+    int next_col_index = (int)m->ja[next_col_index_i++];
+    int vals_this_row = 0;
+    for (int i = 0; i < m->dimY; i++) {
+        for (int j = 0; j < m->dimX; j++) {
+            if (vals_this_row < els_so_far && j == next_col_index) {
+                printf("%.2f   ", next_val);
+                next_val = m->nnz[next_val_i++];
+                next_col_index = (int)m->ja[next_col_index_i++];
+                vals_this_row++;
+            } else {
+                printf("0.00   ");
+            }
+        }
+        els_so_far = (int)m->ia[els_so_far_i++];
+        printf("\n");
+    }
 }

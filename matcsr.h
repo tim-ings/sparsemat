@@ -12,8 +12,11 @@ struct matcsr_ {
     float* ia;  // The number of elements in each row. An extra element IA[0] = 0 is
                 // used by convention. This array can be used to index into the NNZ array for each i-th row
     float* ja;  // Stores the column index of each non-zero element
+    int dimX;
+    int dimY;
 };
 
 matcsr* matcsr_new(const float* data, int dimX, int dimY);
+void matcsr_print(matcsr* m);
 
 #endif //SPARSEMAT_MATCSR_H

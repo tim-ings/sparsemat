@@ -65,11 +65,17 @@ int readfile(const char* fileName) {
         free(line);
 
     matcoo* matcoo = matcoo_new(data, dimX, dimY);
+    matcoo_print(matcoo);
+
     matcsr* matcsr = matcsr_new(data, dimX, dimY);
+    matcsr_print(matcsr);
+
     matcsc* matcsc = matcsc_new(data, dimX, dimY);
+    matcsc_print(matcsc);
     return 0;
 }
 
 int main(int argc, char *argv[]) {
-    readfile("data/float64.in");
+    readfile("data/float1.in");
+    printf("\n");
 }
