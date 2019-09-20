@@ -39,6 +39,8 @@ stdlib.h
 -
 stdio.h
 -
+memory.h
+-
 ll_float.h
 /Users/tim/repo/sparsemat/ll_float.h
 

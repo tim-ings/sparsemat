@@ -19,8 +19,11 @@ struct matcsr_ {
 
 matcsr* matcsr_new(const float* data, int dimX, int dimY);
 matcsr* matcsr_sm(matcsr* m, float s);
+matcsr* matcsr_add(matcsr* m1, matcsr* m2);
 float matcsr_trace(matcsr* m);
 void matcsr_print(matcsr* m);
+float matcsr_get(matcsr* m, int i, int j);
+void matcsr_set(matcsr* m, int i, int j, float val);
 
 
-#endif SPARSEMAT_MATCSR_H
+#endif

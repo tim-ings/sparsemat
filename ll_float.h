@@ -22,7 +22,7 @@ struct ll_float_node_ {
 
 void ll_float_push(ll_float* list, float value);
 ll_float* ll_float_new();
-ll_float_node* ll_float_get(ll_float* list, int index);
 float ll_float_next(ll_float_node** cur);
+void ll_float_free(ll_float* ll);
 
 #endif //SPARSEMAT_LL_FLOAT_H

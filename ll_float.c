@@ -39,3 +39,13 @@ float ll_float_next(ll_float_node** cur) {
     *cur = (*cur)->next;
     return val;
 }
+
+void ll_float_free(ll_float* ll) {
+    ll_float_node* c = ll->first;
+    while (c) {
+        ll_float_node* old = c;
+        ll_float_next(&c);
+        free(old);
+    }
+    free(ll);
+}

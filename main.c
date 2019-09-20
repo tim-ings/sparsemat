@@ -8,18 +8,6 @@
 #include "matcsc.h"
 
 
-#define LOAD_COUNT 1
-#define ITT_COUNT 1500000
-#define ITT_COUNT_BIG ITT_COUNT * 100
-
-#define TEST_SM 0
-#define TEST_TR 0
-#define TEST_AD 1
-#define TEST_TS 0
-#define TEST_MM 0
-
-
-
 struct timespec tstart={0,0}, tend={0,0};
 
 void timer_start() {
@@ -31,35 +19,83 @@ float timer_end() {
     return ((double)tend.tv_sec + 1.0e-9*tend.tv_nsec) - ((double)tstart.tv_sec + 1.0e-9*tstart.tv_nsec);
 }
 
-int readfile(const char* fileName) {
+float** readfile_arr(const char* fileName, int* out_dimX, int* out_dimY) {
     char* line = NULL;
     size_t len = 0;
     ssize_t read;
     FILE* fp = fopen(fileName, "r");
     if (fp == NULL) {
         printf("File does not exist: %s", fileName);
-        return 1;
+        return NULL;
     }
-    int dimX = -1;
-    int dimY = -1;
-    float* data = NULL;
     int counter = 0;
+    float** data = NULL;
     while ((read = getline(&line, &len, fp)) != -1) {
-#ifdef DEBUG_VERBOSE
-        printf("Retrieved line of length %zu\n", read);
-#endif
         line[read - 1] = '\0';
         switch (counter) {
             case 0: {
                 break;
             }
             case 1: {
-                dimX = (int)strtol(line, NULL, 10);
+                *out_dimX = (int)strtol(line, NULL, 10);
                 break;
             }
             case 2: {
-                dimY = (int)strtol(line, NULL, 10);
-                data = (float*)malloc(sizeof(float) * dimX * dimY);
+                *out_dimY = (int)strtol(line, NULL, 10);
+                data = (float**)malloc(sizeof(float*) * (*out_dimY));
+                break;
+            }
+            case 3: {
+                char* err;
+                char* token;
+                const char delim[2] = " ";
+                for (int i = 0; i < *out_dimY; i++) {
+                    data[i] = malloc(sizeof(float) * (*out_dimX));
+                    for (int j = 0; j < *out_dimX; j++) {
+                        token = strtok(i == 0 && j == 0 ? line : NULL, delim);
+                        data[i][j] = (float)strtof(token, &err);
+                    }
+                }
+                break;
+            }
+            default: {
+                printf("Unexpected line in %s, ignoring it\n", fileName);
+                return NULL;
+            }
+        }
+        counter++;
+    }
+    fclose(fp);
+    if (line)
+        free(line);
+
+    return data;
+}
+
+float* readfile(const char* fileName, int* out_dimX, int* out_dimY) {
+    char* line = NULL;
+    size_t len = 0;
+    ssize_t read;
+    FILE* fp = fopen(fileName, "r");
+    if (fp == NULL) {
+        printf("File does not exist: %s", fileName);
+        return NULL;
+    }
+    int counter = 0;
+    float* data = NULL;
+    while ((read = getline(&line, &len, fp)) != -1) {
+        line[read - 1] = '\0';
+        switch (counter) {
+            case 0: {
+                break;
+            }
+            case 1: {
+                *out_dimX = (int)strtol(line, NULL, 10);
+                break;
+            }
+            case 2: {
+                *out_dimY = (int)strtol(line, NULL, 10);
+                data = (float*)malloc(sizeof(float) * (*out_dimX) * (*out_dimY));
                 break;
             }
             case 3: {
@@ -67,7 +103,7 @@ int readfile(const char* fileName) {
                 char* token = strtok(line, delim);
                 char* err;
                 data[0] = (float)strtod(token, &err);
-                for (int i = 1; i < dimX * dimY; i++) {
+                for (int i = 1; i < ((*out_dimX) * (*out_dimY)); i++) {
                     token = strtok(NULL, delim);
                     data[i] = (float)strtod(token, &err);
                 }
@@ -75,129 +111,178 @@ int readfile(const char* fileName) {
             }
             default: {
                 printf("Unexpected line in %s, ignoring it\n", fileName);
+                return NULL;
             }
         }
         counter++;
     }
+    fclose(fp);
+    if (line)
+        free(line);
 
-#ifdef DEBUG_VERBOSE
-    printf("DIM X = '%d'\n", dimX);
-    printf("DIM Y = '%d'\n", dimY);
+    return data;
+}
 
-    for (int i = 0; i < dimX * dimY; i++) {
-        printf("%f, ", data[i]);
-    }
-    printf("\n");
-#endif
-
-    /*
-     * LOAD MATRICES
-     */
-    matcoo* mcoo;
-    timer_start();
-    for (int i = 0; i < LOAD_COUNT; i++) {
-        mcoo = matcoo_new(data, dimX, dimY);
-    }
-    float elapsed = timer_end();
-    printf("Loaded %d COO matrices in %.5fs\n", LOAD_COUNT, elapsed);
-    matcoo_print(mcoo);
-
-    matcsr* mcsr;
-    timer_start();
-    for (int i = 0; i < LOAD_COUNT; i++) {
-        mcsr = matcsr_new(data, dimX, dimY);
-    }
-    elapsed = timer_end();
-    printf("Loaded %d CSR matrices in %.5fs\n", LOAD_COUNT, elapsed);
-    matcsr_print(mcsr);
-
-    matcsc* mcsc;
-    timer_start();
-    for (int i = 0; i < LOAD_COUNT; i++) {
-        mcsc = matcsc_new(data, dimX, dimY);
-    }
-    elapsed = timer_end();
-    printf("Loaded %d CSC matrices in %.5fs\n", LOAD_COUNT, elapsed);
-    matcsc_print(mcsc);
-
-    /*
-     * CALCULATE TRACE
-     */
-    if (TEST_TR) {
-        float sum;
-        timer_start();
-        for (int i = 0; i < ITT_COUNT_BIG; i++) {
-            sum = matcoo_trace(mcoo);
+matcoo* sm(const char* filepath, float a) {
+    int dimX;
+    int dimY;
+    float* data = readfile(filepath, &dimX, &dimY);
+    matcoo* m = matcoo_blank();
+    m->dimX = dimX;
+    m->dimY = dimY;
+    for (int i = 0; i < dimY; i++) {
+        for (int j = 0; j < dimX; j++) {
+            float d = data[i * dimY + j];
+            if (d != 0) {
+                ll_float_push(m->coords_val, d * a);
+                ll_float_push(m->coords_i, (float)i);
+                ll_float_push(m->coords_j, (float)j);
+            }
         }
-        elapsed = timer_end();
-        printf("Calculated trace of %d COO matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
-        printf("Trace COO: %.2f\n", sum);
+    }
+    return m;
+}
 
-        timer_start();
-        for (int i = 0; i < ITT_COUNT_BIG; i++) {
-            sum = matcsr_trace(mcsr);
-        }
-        elapsed = timer_end();
-        printf("Calculated trace of %d CSR matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
-        printf("Trace CSR: %.2f\n", sum);
+float trace(const char* filepath) {
+    int dimX;
+    int dimY;
+    float* data = readfile(filepath, &dimX, &dimY);
+    float diagsum = 0;
+    for (int i = 0; i < dimX; i++) {
+        diagsum += data[i * (dimX + 1)];
+    }
+    return diagsum;
+}
 
-        timer_start();
-        for (int i = 0; i < ITT_COUNT_BIG; i++) {
-            sum = matcsc_trace(mcsc);
+matcoo* add(const char* filepath1, const char* filepath2) {
+    int dimX1;
+    int dimY1;
+    float* data1 = readfile(filepath1, &dimX1, &dimY1);
+    int dimX2;
+    int dimY2;
+    float* data2 = readfile(filepath2, &dimX2, &dimY2);
+    if (dimX1 != dimX2 || dimY1 != dimY2) {
+        return NULL;
+    }
+    matcoo* m = matcoo_blank();
+    m->dimX = dimX1;
+    m->dimY = dimY1;
+    for (int i = 0; i < dimY1; i++) {
+        for (int j = 0; j < dimY1; j++) {
+            int di = i * dimY1 + j;
+            float d1 = data1[di];
+            float d2 = data2[di];
+            if (d1 != 0 || d2 != 0) {
+                ll_float_push(m->coords_val, d1 + d2);
+                ll_float_push(m->coords_i, (float)i);
+                ll_float_push(m->coords_j, (float)j);
+            }
         }
-        elapsed = timer_end();
-        printf("Calculated trace of %d CSC matrices in %.5fs\n", ITT_COUNT_BIG, elapsed);
-        printf("Trace CSC: %.2f\n", sum);
+    }
+    return m;
+}
+
+matcoo* transpose(const char* filepath) {
+    int dimX;
+    int dimY;
+    float* data = readfile(filepath, &dimX, &dimY);
+    matcoo* m = matcoo_blank();
+    m->dimX = dimY; // swap x and y dims on the output mat
+    m->dimY = dimX;
+    for (int i = 0; i < dimY; i++) {
+        for (int j = 0; j < dimX; j++) {
+            float d = data[i * dimY + j];
+            if (d != 0) {
+                ll_float_push(m->coords_val, d);
+                ll_float_push(m->coords_i, (float)j); // swap the i and j coords to transpose the value
+                ll_float_push(m->coords_j, (float)i);
+            }
+        }
+    }
+    return m;
+}
+
+matcoo*  multiply(const char* filepath1, const char* filepath2) {
+    int dimX1;
+    int dimY1;
+    int dimX2;
+    int dimY2;
+    float** data1 = readfile_arr(filepath1, &dimX1, &dimY1);
+    float** data2 = readfile_arr(filepath2, &dimX2, &dimY2);
+    float** mul = (float**)malloc(sizeof(float*) * dimY1);
+    for (int i = 0; i < dimY1; i++)
+    {
+        mul[i] = (float*)malloc(sizeof(float) * dimX1);
+        for (int j = 0; j < dimX1; j++)
+        {
+            for (int k = 0; k < dimY1; k++)
+            {
+                mul[i][j] += data1[i][k] * data2[k][j];
+            }
+        }
     }
 
-    /*
-     * CALCULATE SCALAR MULTIPLE
-     */
-    if (TEST_SM) {
-        int sm_count = (ITT_COUNT % 2 == 0) ? ((ITT_COUNT_BIG) + 1) : (ITT_COUNT_BIG);
-        timer_start();
-        for (int i = 0; i < sm_count; i++) {
-            mcoo = matcoo_sm(mcoo, (i % 2 == 0) ? (10.0f) : (1.0f / 10.0f));
+    printf("Matrix Multiplication:\n");
+    for (int i = 0; i < dimY1; i++){
+        for (int j = 0; j < dimX1; j++) {
+            printf("%.2f\t\t", mul[i][j]);
         }
-        elapsed = timer_end();
-        printf("Calculated scalar multiple of %d COO matrices in %.5fs\n", sm_count, elapsed);
-        matcoo_print(mcoo);
-
-        timer_start();
-        for (int i = 0; i < sm_count; i++) {
-            mcsr = matcsr_sm(mcsr, i % 2 == 0 ? 10.0f : 1.0f / 10.0f);
-        }
-        elapsed = timer_end();
-        printf("Calculated scalar multiple of %d CSR matrices in %.5fs\n", sm_count, elapsed);
-        matcsr_print(mcsr);
-
-        timer_start();
-        for (int i = 0; i < sm_count; i++) {
-            mcsc = matcsc_sm(mcsc, i % 2 == 0 ? 10.0f : 1.0f / 10.0f);
-        }
-        elapsed = timer_end();
-        printf("Calculated scalar multiple of %d CSC matrices in %.5fs\n", sm_count, elapsed);
-        matcsr_print(mcsr);
+        printf("\n");
     }
 
-    if (TEST_AD) {
-        printf("Adding m1 and m2:\n");
-        matcoo_print(mcoo);
-        printf("+\n");
-        matcoo_print(mcoo);
-        printf("=\n");
-        matcoo* mad = matcoo_add(mcoo, mcoo);
-        matcoo_print(mad);
-    }
-
-//    fclose(fp);
-//    if (line)
-//        free(line);
-
-    return 0;
+    return mul;
 }
 
 int main(int argc, char *argv[]) {
-    readfile("data/float1.in");
+
+//    int len = 10000 * 1000;
+//    timer_start();
+//    for (int i = 0; i < len; i++) {
+//        free(malloc(1));
+//        free(malloc(1));
+//    }
+//    float t1 = timer_end();
+//    printf("Combined loop time: %.4f\n", t1);
+//    timer_start();
+//    for (int i = 0; i < len; i++) {
+//        free(malloc(1));
+//    }
+//    for (int i = 0; i < len; i++) {
+//        free(malloc(1));
+//    }
+//    float t2 = timer_end();
+//    printf("Split loop time: %.4f\n", t2);
+
+
+
+
+    const char* f1 = "data/float123.in";
+    const char* f2 = "data/float123.in";
+
+    int dx, dy;
+    float* d = readfile(f1, &dx, &dy);
+    matcoo* m = matcoo_new(d, dx, dy);
+    printf("Initial Matrix:\n");
+    matcoo_print(m);
+
+    matcoo* m_sm = sm(f1, 2);
+    printf("Scalar Multiplication:\n");
+    matcoo_print(m_sm);
+
+    float t = trace(f1);
+    printf("Trace: %.2f\n", t);
+
+    matcoo* m_add = add(f1, f2);
+    printf("Matrix Addition:\n");
+    matcoo_print(m_add);
+
+    matcoo* m_transpose = transpose(f1);
+    printf("Matrix Transposition:\n");
+    matcoo_print(m_transpose);
+
+    matcoo* m_multiply = multiply(f1, f2);
+//    printf("Matrix Multiplication:\n");
+//    matcoo_print(m_multiply);
+
     return 0;
 }

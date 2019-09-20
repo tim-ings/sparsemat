@@ -2,117 +2,26 @@
 
 
 matcsc* matcsc_new(const float* data, int dimX, int dimY) {
-#ifdef DEBUG_VERBOSE
-    printf("\nBuilding new %dx%d CSC matrix\n", dimX, dimY);
-#endif
-    // build a linked list of all the non zero values (for nnz)
-    ll_float* nzlist = ll_float_new();
-    // build a list of the number of elements per column so far (for ia)
-    ll_float* elements_per_col = ll_float_new();
-    // build a list of the row index of each non zero value (for ja)
-    ll_float* col_indices = ll_float_new();
+    matcsc* m = (matcsc*)malloc(sizeof(matcsc));
+    m->dimX = dimX;
+    m->dimY = dimY;
+    m->nnz = malloc(sizeof(float) * dimX * dimY); // allocate a worst case array
+    m->ia = malloc(sizeof(float) * dimX * dimY); // allocate a worst case array
+    m->ja = malloc(sizeof(float) * dimX * dimY); // allocate a worst case array
+    m->nnz_len = 0;
+    m->ia_len = 0;
+    m->ja_len = 0;
     int stride = dimX;
-    int els_so_far = 0;
-#ifdef DEBUG_VERBOSE
-    int prints_so_far = 0;
-#endif
     for (int i = 0; i < dimX; i++) {
         for (int j = 0; j < dimY; j++) {
             float val = data[i * stride + j];
             if (val != 0) {
-                ll_float_push(nzlist, val);
-                ll_float_push(col_indices, (float)j);
-                els_so_far++;
-#ifdef DEBUG_VERBOSE
-                if (prints_so_far < PRINT_COUNT_MAX / 4) {
-                    printf("{ nzv: %.2f, els_so_far: %d, col_index: %d }, ", val, els_so_far, j);
-                    prints_so_far++;
-                }
-#endif
+                m->nnz[m->nnz_len++] = val;
+                m->ia[m->ia_len++] = (float)j;
             }
         }
-        ll_float_push(elements_per_col, (float)els_so_far);
+        m->ja[m->ja_len++] = (float)m->nnz_len;
     }
-#ifdef DEBUG_VERBOSE
-    printf("...\n");
-#endif
-
-    matcsc* m = (matcsc*)malloc(sizeof(matcsc));
-    m->dimX = dimX;
-    m->dimY = dimY;
-
-    // transform linked list into array
-    m->nnz = malloc(sizeof(float) * nzlist->length);
-    int i = 0;
-#ifdef DEBUG_VERBOSE
-    prints_so_far = 0;
-    printf("nnz: [ ");
-#endif
-    ll_float_node* nnz_cur = nzlist->first;
-    while (nnz_cur) {
-        float val = ll_float_next(&nnz_cur);
-        m->nnz[i] = val;
-        i++;
-#ifdef DEBUG_VERBOSE
-        if (prints_so_far < PRINT_COUNT_MAX) {
-            printf("%.2f, ", val);
-            prints_so_far++;
-        }
-#endif
-    }
-    m->nnz_length = i;
-#ifdef DEBUG_VERBOSE
-    printf("]...\n");
-#endif
-
-    // transform linked list into array
-    m->ia = malloc(sizeof(float) * elements_per_col->length + 1);
-    m->ia[0] = 0;
-    i = 1;
-#ifdef DEBUG_VERBOSE
-    prints_so_far = 0;
-    printf("ia:  [ ");
-    printf("%.2f, ", m->ia[0]);
-#endif
-    ll_float_node* epr_cur = elements_per_col->first;
-    while (epr_cur) {
-        float val = ll_float_next(&epr_cur);
-        m->ia[i] = val;
-        i++;
-#ifdef DEBUG_VERBOSE
-        if (prints_so_far < PRINT_COUNT_MAX) {
-            printf("%.2f, ", val);
-            prints_so_far++;
-        }
-#endif
-    }
-#ifdef DEBUG_VERBOSE
-    printf("]...\n");
-#endif
-
-    // transform linked list into array
-    m->ja = malloc(sizeof(float) * col_indices->length);
-    i = 0;
-#ifdef DEBUG_VERBOSE
-    prints_so_far = 0;
-    printf("ja:  [ ");
-#endif
-    ll_float_node* ci_cur = col_indices->first;
-    while (ci_cur) {
-        float val = ll_float_next(&ci_cur);
-        m->ja[i] = val;
-        i++;
-#ifdef DEBUG_VERBOSE
-        if (prints_so_far < PRINT_COUNT_MAX) {
-            printf("%.2f, ", val);
-            prints_so_far++;
-        }
-#endif
-    }
-
-#ifdef DEBUG_VERBOSE
-    printf("]...\n%dx%d CSC matrix built\n", dimX, dimY);
-#endif
     return m;
 }
 
@@ -141,7 +50,7 @@ void matcsc_print(matcsc* m) {
 }
 
 matcsc* matcsc_sm(matcsc* m, float s) {
-    for (int i = 0; i < m->nnz_length; i++) {
+    for (int i = 0; i < m->nnz_len; i++) {
         m->nnz[i] *= s;
     }
     return m;
