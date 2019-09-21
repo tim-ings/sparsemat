@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/sparsemat.dir/ll_float.c.o"
   "CMakeFiles/sparsemat.dir/matcoo.c.o"
   "CMakeFiles/sparsemat.dir/matcsc.c.o"
+  "CMakeFiles/sparsemat.dir/list.c.o"
   "sparsemat.pdb"
   "sparsemat"
 )

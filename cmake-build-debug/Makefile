@@ -123,6 +123,33 @@ sparsemat/fast:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/build
 .PHONY : sparsemat/fast
 
+list.o: list.c.o
+
+.PHONY : list.o
+
+# target to build an object file
+list.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list.c.o
+.PHONY : list.c.o
+
+list.i: list.c.i
+
+.PHONY : list.i
+
+# target to preprocess a source file
+list.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list.c.i
+.PHONY : list.c.i
+
+list.s: list.c.s
+
+.PHONY : list.s
+
+# target to generate assembly for a file
+list.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list.c.s
+.PHONY : list.c.s
+
 ll_float.o: ll_float.c.o
 
 .PHONY : ll_float.o
@@ -267,6 +294,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... sparsemat"
+	@echo "... list.o"
+	@echo "... list.i"
+	@echo "... list.s"
 	@echo "... ll_float.o"
 	@echo "... ll_float.i"
 	@echo "... ll_float.s"

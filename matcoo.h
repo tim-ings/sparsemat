@@ -5,9 +5,9 @@
 
 typedef struct matcoo_ matcoo;
 struct matcoo_ {
-    ll_float* coords_val;
-    ll_float* coords_i;
-    ll_float* coords_j;
+    ll_float* vals;
+    ll_float* is;
+    ll_float* js;
     int dimX;
     int dimY;
 };

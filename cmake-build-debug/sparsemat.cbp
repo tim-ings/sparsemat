@@ -78,6 +78,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/tim/repo/sparsemat/list.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/list.h">
+			<Option target="sparsemat"/>
+		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/ll_float.c">
 			<Option target="sparsemat"/>
 		</Unit>

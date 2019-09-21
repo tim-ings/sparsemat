@@ -134,9 +134,9 @@ matcoo* sm(const char* filepath, float a) {
         for (int j = 0; j < dimX; j++) {
             float d = data[i * dimY + j];
             if (d != 0) {
-                ll_float_push(m->coords_val, d * a);
-                ll_float_push(m->coords_i, (float)i);
-                ll_float_push(m->coords_j, (float)j);
+                ll_float_push(m->vals, d * a);
+                ll_float_push(m->is, (float)i);
+                ll_float_push(m->js, (float)j);
             }
         }
     }
@@ -173,9 +173,9 @@ matcoo* add(const char* filepath1, const char* filepath2) {
             float d1 = data1[di];
             float d2 = data2[di];
             if (d1 != 0 || d2 != 0) {
-                ll_float_push(m->coords_val, d1 + d2);
-                ll_float_push(m->coords_i, (float)i);
-                ll_float_push(m->coords_j, (float)j);
+                ll_float_push(m->vals, d1 + d2);
+                ll_float_push(m->is, (float)i);
+                ll_float_push(m->js, (float)j);
             }
         }
     }
@@ -193,16 +193,16 @@ matcoo* transpose(const char* filepath) {
         for (int j = 0; j < dimX; j++) {
             float d = data[i * dimY + j];
             if (d != 0) {
-                ll_float_push(m->coords_val, d);
-                ll_float_push(m->coords_i, (float)j); // swap the i and j coords to transpose the value
-                ll_float_push(m->coords_j, (float)i);
+                ll_float_push(m->vals, d);
+                ll_float_push(m->is, (float)j); // swap the i and j coords to transpose the value
+                ll_float_push(m->js, (float)i);
             }
         }
     }
     return m;
 }
 
-matcoo*  multiply(const char* filepath1, const char* filepath2) {
+float**  multiply(const char* filepath1, const char* filepath2) {
     int dimX1;
     int dimY1;
     int dimX2;
@@ -280,9 +280,15 @@ int main(int argc, char *argv[]) {
     printf("Matrix Transposition:\n");
     matcoo_print(m_transpose);
 
-    matcoo* m_multiply = multiply(f1, f2);
+    float** m_multiply = multiply(f1, f2);
 //    printf("Matrix Multiplication:\n");
 //    matcoo_print(m_multiply);
+
+
+    printf("\nmatcsr test:\n");
+    matcsr* mcsr = matcsr_new(d, dx, dy);
+    printf("matcsr test:\n");
+    matcsr_print(mcsr);
 
     return 0;
 }

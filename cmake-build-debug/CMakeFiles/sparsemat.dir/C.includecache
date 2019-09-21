@@ -6,49 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/Users/tim/repo/sparsemat/ll_float.h
-stdlib.h
--
+/Users/tim/repo/sparsemat/list.c
+list.h
+/Users/tim/repo/sparsemat/list.h
 
-/Users/tim/repo/sparsemat/main.c
+/Users/tim/repo/sparsemat/list.h
 stdio.h
 -
 stdlib.h
--
-string.h
--
-time.h
--
-stdbool.h
--
-matcoo.h
-/Users/tim/repo/sparsemat/matcoo.h
-matcsr.h
-/Users/tim/repo/sparsemat/matcsr.h
-matcsc.h
-/Users/tim/repo/sparsemat/matcsc.h
-
-/Users/tim/repo/sparsemat/matcoo.h
-ll_float.h
-/Users/tim/repo/sparsemat/ll_float.h
-stdio.h
--
-
-/Users/tim/repo/sparsemat/matcsc.h
-stdlib.h
--
-stdio.h
 -
 memory.h
 -
-ll_float.h
-/Users/tim/repo/sparsemat/ll_float.h
-
-/Users/tim/repo/sparsemat/matcsr.h
-stdlib.h
--
-stdio.h
--
-ll_float.h
-/Users/tim/repo/sparsemat/ll_float.h
 
