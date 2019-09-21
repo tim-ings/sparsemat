@@ -1,13 +1,13 @@
 #include "matcoo.h"
 
 
-matcoo* matcoo_blank() {
+matcoo* matcoo_zeroes(int dx, int dy) {
     matcoo* m = malloc(sizeof(matcoo));
     m->vals = ll_float_new();
     m->is = ll_float_new();
     m->js = ll_float_new();
-    m->dimX = 0;
-    m->dimY = 0;
+    m->dimX = dx;
+    m->dimY = dy;
     return m;
 }
 
@@ -15,6 +15,7 @@ void matcoo_free(matcoo* m) {
     ll_float_free(m->vals);
     ll_float_free(m->is);
     ll_float_free(m->js);
+    free(m);
 }
 
 matcoo* matcoo_new(const float* data, int dimX, int dimY) {
@@ -41,6 +42,15 @@ matcoo* matcoo_new(const float* data, int dimX, int dimY) {
         ll_float_push(m->vals, data[dimY * stride + dimX]);
         ll_float_push(m->is, (float)dimY);
         ll_float_push(m->js, (float)dimX);
+    }
+    return m;
+}
+
+matcoo* matcoo_build(matcoo* m, float val, int i, int j) {
+    if (val != 0) {
+        ll_float_push(m->vals, val);
+        ll_float_push(m->is, (float)i);
+        ll_float_push(m->js, (float)j);
     }
     return m;
 }

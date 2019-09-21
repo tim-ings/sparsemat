@@ -127,9 +127,7 @@ matcoo* sm(const char* filepath, float a) {
     int dimX;
     int dimY;
     float* data = readfile(filepath, &dimX, &dimY);
-    matcoo* m = matcoo_blank();
-    m->dimX = dimX;
-    m->dimY = dimY;
+    matcoo* m = matcoo_zeroes(dimX, dimY);
     for (int i = 0; i < dimY; i++) {
         for (int j = 0; j < dimX; j++) {
             float d = data[i * dimY + j];
@@ -164,9 +162,7 @@ matcoo* add(const char* filepath1, const char* filepath2) {
     if (dimX1 != dimX2 || dimY1 != dimY2) {
         return NULL;
     }
-    matcoo* m = matcoo_blank();
-    m->dimX = dimX1;
-    m->dimY = dimY1;
+    matcoo* m = matcoo_zeroes(dimX1, dimY1);
     for (int i = 0; i < dimY1; i++) {
         for (int j = 0; j < dimY1; j++) {
             int di = i * dimY1 + j;
@@ -186,7 +182,7 @@ matcoo* transpose(const char* filepath) {
     int dimX;
     int dimY;
     float* data = readfile(filepath, &dimX, &dimY);
-    matcoo* m = matcoo_blank();
+    matcoo* m = matcoo_zeroes(dimX, dimY);
     m->dimX = dimY; // swap x and y dims on the output mat
     m->dimY = dimX;
     for (int i = 0; i < dimY; i++) {
@@ -253,42 +249,75 @@ int main(int argc, char *argv[]) {
 //    float t2 = timer_end();
 //    printf("Split loop time: %.4f\n", t2);
 
-
-
-
     const char* f1 = "data/float123.in";
-    const char* f2 = "data/float123.in";
+    const char* f2 = "data/float3.in";
 
-    int dx, dy;
-    float* d = readfile(f1, &dx, &dy);
-    matcoo* m = matcoo_new(d, dx, dy);
-    printf("Initial Matrix:\n");
-    matcoo_print(m);
-
-    matcoo* m_sm = sm(f1, 2);
-    printf("Scalar Multiplication:\n");
-    matcoo_print(m_sm);
-
-    float t = trace(f1);
-    printf("Trace: %.2f\n", t);
-
-    matcoo* m_add = add(f1, f2);
-    printf("Matrix Addition:\n");
-    matcoo_print(m_add);
-
-    matcoo* m_transpose = transpose(f1);
-    printf("Matrix Transposition:\n");
-    matcoo_print(m_transpose);
-
-    float** m_multiply = multiply(f1, f2);
+//    matcoo* m = matcoo_new(d, dx, dy);
+//    printf("Initial Matrix:\n");
+//    matcoo_print(m);
+//
+//    matcoo* m_sm = sm(f1, 2);
+//    printf("Scalar Multiplication:\n");
+//    matcoo_print(m_sm);
+//
+//    float t = trace(f1);
+//    printf("Trace: %.2f\n", t);
+//
+//    matcoo* m_add = add(f1, f2);
+//    printf("Matrix Addition:\n");
+//    matcoo_print(m_add);
+//
+//    matcoo* m_transpose = transpose(f1);
+//    printf("Matrix Transposition:\n");
+//    matcoo_print(m_transpose);
+//
+//    float** m_multiply = multiply(f1, f2);
 //    printf("Matrix Multiplication:\n");
 //    matcoo_print(m_multiply);
 
+//    matcsr* mcsr = NULL;
 
-    printf("\nmatcsr test:\n");
-    matcsr* mcsr = matcsr_new(d, dx, dy);
-    printf("matcsr test:\n");
-    matcsr_print(mcsr);
+//    printf("\nMatCSR Zeroes:\n");
+//    mcsr = matcsr_zeroes(4, 4);
+//    matcsr_print(mcsr);
+//
+//    printf("\nMatCSR Inital:\n");
+//    int dx, dy;
+//    float* d = readfile(f1, &dx, &dy);
+//    mcsr = matcsr_new(d, dx, dy);
+//    mcsr = matcsr_zeroes(dx, dy);
+//    for (int i = 0; i < dy; i++) {
+//        for (int j = 0; j < dx; j++) {
+//            float v = d[i * dx + j];
+//            mcsr = matcsr_build(mcsr, v, i, j);
+//        }
+//    }
+//    mcsr = matcsr_build(d, dx, dy);
+//    printf("MAT PRINT:\n");
+//    matcsr_print(mcsr);
+//    printf("RAW PRINT:\n");
+//    matcsr_rawprint(mcsr);
+
+//    printf("\nMatCSR Scalar Multiplication:\n");
+//    mcsr = matcsr_fromfile(f1);
+//    matcsr_sm(mcsr, 2.0f);
+//    matcsr_print(mcsr);
+//
+//    printf("\nMatCSR Trace:\n");
+//    mcsr = matcsr_fromfile(f1);
+//    float trace = matcsr_trace(mcsr);
+//    printf("trace = %.2f\n", trace);
+
+    int dx, dy;
+    float* d = readfile(f1, &dx, &dy);
+    matcoo* m = matcoo_zeroes(dx, dy);
+    for (int i = 0; i < dy; i++) {
+        for (int j = 0; j < dx; j++) {
+            float v = d[i * dx + j];
+            m = matcoo_build(m, v, i, j);
+        }
+    }
+    matcoo_print(m);
 
     return 0;
 }

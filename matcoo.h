@@ -13,7 +13,9 @@ struct matcoo_ {
 };
 
 matcoo* matcoo_new(const float* data, int dimX, int dimY);
-matcoo* matcoo_blank();
+void matcoo_free(matcoo* m);
+matcoo* matcoo_zeroes(int dx, int dy);
+matcoo* matcoo_build(matcoo* m, float val, int i, int j);
 float matcoo_get(matcoo* m, int mi, int mj);
 void matcoo_print(matcoo* m);
 
