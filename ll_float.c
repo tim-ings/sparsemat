@@ -1,8 +1,8 @@
 #include "ll_float.h"
 
 
-void ll_float_push(ll_float* list, float value) {
-    ll_float_node* new_node = malloc(sizeof(ll_float_node));
+void ll_float_push(ll_float *list, float value) {
+    ll_float_node *new_node = malloc(sizeof(ll_float_node));
     new_node->list = list;
     new_node->next = NULL;
     new_node->value = value;
@@ -18,39 +18,39 @@ void ll_float_push(ll_float* list, float value) {
     list->length++;
 }
 
-ll_float* ll_float_new() {
-    ll_float* list = (ll_float*)malloc(sizeof(ll_float));
+ll_float *ll_float_new() {
+    ll_float *list = (ll_float *) malloc(sizeof(ll_float));
     list->length = 0;
     list->first = NULL;
     list->last = NULL;
     return list;
 }
 
-ll_float_node* ll_float_get(ll_float* list, int index) {
-    ll_float_node* current = list->first;
+ll_float_node *ll_float_get(ll_float *list, int index) {
+    ll_float_node *current = list->first;
     for (int i = 0; i < index; i++) {
         current = current->next;
     }
     return current;
 }
 
-float ll_float_next(ll_float_node** cur) {
+float ll_float_next(ll_float_node **cur) {
     float val = (*cur)->value;
     *cur = (*cur)->next;
     return val;
 }
 
-void ll_float_free(ll_float* ll) {
-    ll_float_node* c = ll->first;
+void ll_float_free(ll_float *ll) {
+    ll_float_node *c = ll->first;
     while (c) {
-        ll_float_node* old = c;
+        ll_float_node *old = c;
         ll_float_next(&c);
         free(old);
     }
     free(ll);
 }
 
-void ll_float_remove(ll_float_node* n) {
+void ll_float_remove(ll_float_node *n) {
     if (n->prev) {
         n->prev->next = n->next;
     } else {

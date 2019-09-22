@@ -18,6 +18,7 @@ CMakeFiles/sparsemat.dir/matcoo.c.o: ../ll_float.h
 CMakeFiles/sparsemat.dir/matcoo.c.o: ../matcoo.c
 CMakeFiles/sparsemat.dir/matcoo.c.o: ../matcoo.h
 
+CMakeFiles/sparsemat.dir/matcsc.c.o: ../list.h
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../ll_float.h
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../matcsc.c
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../matcsc.h

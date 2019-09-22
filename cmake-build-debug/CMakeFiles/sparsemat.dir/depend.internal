@@ -19,6 +19,7 @@ CMakeFiles/sparsemat.dir/matcoo.c.o
  /Users/tim/repo/sparsemat/matcoo.c
  /Users/tim/repo/sparsemat/matcoo.h
 CMakeFiles/sparsemat.dir/matcsc.c.o
+ /Users/tim/repo/sparsemat/list.h
  /Users/tim/repo/sparsemat/ll_float.h
  /Users/tim/repo/sparsemat/matcsc.c
  /Users/tim/repo/sparsemat/matcsc.h
