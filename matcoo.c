@@ -73,9 +73,7 @@ float matcoo_get(matcoo* m, int mi, int mj) {
         if ((int)ci->value == mi && (int)cj->value == mj) {
             return cv->value;
         }
-        cv = cv->next;
-        ci = ci->next;
-        cj = cj->next;
+        _matcoo_itt_next(&cv, &ci, &cj);
     }
     return 0.0f;
 }
@@ -119,10 +117,8 @@ matcoo* matcoo_add(matcoo* m1, matcoo* m2) {
     while (c1) {
         // go over every non-0 value in m2
         while (c2) {
-            printf("checking i,j pair (%d, %d) == (%d, %d)\n", (int)i1->value, (int)j1->value, (int)i2->value, (int)j2->value);
             // if we have a match, add them and store in m1
             if (i1->value == i2->value && j1->value == j2->value) {
-                printf("\tfound a matching i,j pair (%d, %d)\n", (int)i1->value, (int)j1->value);
                 c1->value += c2->value;
                 // remove the used value from m2 so we dont check them again
                 ll_float_remove(c2);
@@ -134,13 +130,9 @@ matcoo* matcoo_add(matcoo* m1, matcoo* m2) {
                 j2 = m2->js->first;
                 break;
             }
-            c2 = c2->next;
-            i2 = i2->next;
-            j2 = j2->next;
+            _matcoo_itt_next(&c2, &i2, &j2);
         }
-        c1 = c1->next;
-        i1 = i1->next;
-        j1 = j1->next;
+        _matcoo_itt_next(&c1, &i1, &j1);
     }
     return m1;
 }
@@ -157,4 +149,29 @@ matcoo* matcoo_transpose(matcoo* m) {
         j = j->next;
     }
     return m;
+}
+
+void _matcoo_itt_next(ll_float_node** c, ll_float_node** i, ll_float_node** j) {
+    *c = (*c)->next;
+    *i = (*i)->next;
+    *j = (*j)->next;
+}
+
+matcoo* matcoo_multiply(matcoo* m1, matcoo* m2) {
+    if (m1->dimY != m2->dimX) {
+        assert("Multiplication is only defined for matrices where first.dimY == second.dimX" && 0);
+    }
+    matcoo* res = matcoo_zeroes(m2->dimX, m1->dimY);
+    for (int i = 0; i < m1->dimY; i++) {
+        for (int j = 0; j < m2->dimX; j++) {
+            float sum = 0;
+            for (int k = 0; k < m1->dimX; k++) {
+                float v1 = matcoo_get(m1, i, k);
+                float v2 = matcoo_get(m2, k, j);
+                sum += v1 * v2;
+            }
+            matcoo_build(res, sum, i, j);
+        }
+    }
+    return res;
 }

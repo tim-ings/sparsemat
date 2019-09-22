@@ -23,5 +23,7 @@ matcoo* matcoo_sm(matcoo* m, float a);
 float matcoo_trace(matcoo* m);
 matcoo* matcoo_add(matcoo* m1, matcoo* m2);
 matcoo* matcoo_transpose(matcoo* m);
+matcoo* matcoo_multiply(matcoo* m1, matcoo* m2);
+void _matcoo_itt_next(ll_float_node** c, ll_float_node** i, ll_float_node** j);
 
 #endif
