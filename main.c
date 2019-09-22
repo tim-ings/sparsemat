@@ -229,95 +229,48 @@ float**  multiply(const char* filepath1, const char* filepath2) {
     return mul;
 }
 
-int main(int argc, char *argv[]) {
-
-//    int len = 10000 * 1000;
-//    timer_start();
-//    for (int i = 0; i < len; i++) {
-//        free(malloc(1));
-//        free(malloc(1));
-//    }
-//    float t1 = timer_end();
-//    printf("Combined loop time: %.4f\n", t1);
-//    timer_start();
-//    for (int i = 0; i < len; i++) {
-//        free(malloc(1));
-//    }
-//    for (int i = 0; i < len; i++) {
-//        free(malloc(1));
-//    }
-//    float t2 = timer_end();
-//    printf("Split loop time: %.4f\n", t2);
-
-    const char* f1 = "data/float123.in";
-    const char* f2 = "data/float3.in";
-
-//    matcoo* m = matcoo_new(d, dx, dy);
-//    printf("Initial Matrix:\n");
-//    matcoo_print(m);
-//
-//    matcoo* m_sm = sm(f1, 2);
-//    printf("Scalar Multiplication:\n");
-//    matcoo_print(m_sm);
-//
-//    float t = trace(f1);
-//    printf("Trace: %.2f\n", t);
-//
-//    matcoo* m_add = add(f1, f2);
-//    printf("Matrix Addition:\n");
-//    matcoo_print(m_add);
-//
-//    matcoo* m_transpose = transpose(f1);
-//    printf("Matrix Transposition:\n");
-//    matcoo_print(m_transpose);
-//
-//    float** m_multiply = multiply(f1, f2);
-//    printf("Matrix Multiplication:\n");
-//    matcoo_print(m_multiply);
-
-//    matcsr* mcsr = NULL;
-
-//    printf("\nMatCSR Zeroes:\n");
-//    mcsr = matcsr_zeroes(4, 4);
-//    matcsr_print(mcsr);
-//
-//    printf("\nMatCSR Inital:\n");
-//    int dx, dy;
-//    float* d = readfile(f1, &dx, &dy);
-//    mcsr = matcsr_new(d, dx, dy);
-//    mcsr = matcsr_zeroes(dx, dy);
-//    for (int i = 0; i < dy; i++) {
-//        for (int j = 0; j < dx; j++) {
-//            float v = d[i * dx + j];
-//            mcsr = matcsr_build(mcsr, v, i, j);
-//        }
-//    }
-//    mcsr = matcsr_build(d, dx, dy);
-//    printf("MAT PRINT:\n");
-//    matcsr_print(mcsr);
-//    printf("RAW PRINT:\n");
-//    matcsr_rawprint(mcsr);
-
-//    printf("\nMatCSR Scalar Multiplication:\n");
-//    mcsr = matcsr_fromfile(f1);
-//    matcsr_sm(mcsr, 2.0f);
-//    matcsr_print(mcsr);
-//
-//    printf("\nMatCSR Trace:\n");
-//    mcsr = matcsr_fromfile(f1);
-//    float trace = matcsr_trace(mcsr);
-//    printf("trace = %.2f\n", trace);
-
+matcoo* get_matcoo(const char* fp) {
     int dx, dy;
-    float* d = readfile(f1, &dx, &dy);
+    float* d = readfile(fp, &dx, &dy);
     matcoo* m = matcoo_zeroes(dx, dy);
+
     for (int i = 0; i < dy; i++) {
         for (int j = 0; j < dx; j++) {
             float v = d[i * dx + j];
             m = matcoo_build(m, v, i, j);
         }
     }
-    matcoo_print(m);
+    return m;
+}
+
+int main(int argc, char *argv[]) {
+    const char* f1 = "data/float1.in";
+    const char* f2 = "data/float1.in";
+
+    printf("\tinit:\n");
+    matcoo* m_init = get_matcoo(f1);
+    matcoo_print(m_init);
+
+    printf("\tsm:\n");
+    matcoo* m_sm = get_matcoo(f1);
+    matcoo* m_sm_res = matcoo_sm(m_sm, 2);
+    matcoo_print(m_sm_res);
+
+    printf("\ttrace:\n");
+    matcoo* m_trace = get_matcoo(f1);
+    float t = matcoo_trace(m_trace);
+    printf("t=%.2f\n", t);
+
+    printf("\tadd:\n");
+    matcoo* m_add1 = get_matcoo(f1);
+    matcoo* m_add2 = get_matcoo(f2);
+    matcoo* m_add_res = matcoo_add(m_add1, m_add2);
+    matcoo_print(m_add_res);
+
+    printf("\ttranspose:\n");
+    matcoo* m_transpose = get_matcoo(f1);
+    matcoo* m_transpose_res = matcoo_transpose(m_transpose);
+    matcoo_print(m_transpose_res);
 
     return 0;
 }

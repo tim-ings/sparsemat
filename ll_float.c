@@ -49,3 +49,16 @@ void ll_float_free(ll_float* ll) {
     }
     free(ll);
 }
+
+void ll_float_remove(ll_float_node* n) {
+    if (n->prev) {
+        n->prev->next = n->next;
+    } else {
+        n->list->first = n->next;
+    }
+    if (n->next) {
+        n->next->prev = n->prev;
+    } else {
+        n->list->last = n->prev;
+    }
+}

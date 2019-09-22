@@ -2,6 +2,7 @@
 #define SPARSEMAT_MATCOO_H
 #include "ll_float.h"
 #include <stdio.h>
+#include <assert.h>
 
 typedef struct matcoo_ matcoo;
 struct matcoo_ {
@@ -18,5 +19,9 @@ matcoo* matcoo_zeroes(int dx, int dy);
 matcoo* matcoo_build(matcoo* m, float val, int i, int j);
 float matcoo_get(matcoo* m, int mi, int mj);
 void matcoo_print(matcoo* m);
+matcoo* matcoo_sm(matcoo* m, float a);
+float matcoo_trace(matcoo* m);
+matcoo* matcoo_add(matcoo* m1, matcoo* m2);
+matcoo* matcoo_transpose(matcoo* m);
 
 #endif

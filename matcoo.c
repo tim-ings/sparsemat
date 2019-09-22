@@ -79,3 +79,82 @@ float matcoo_get(matcoo* m, int mi, int mj) {
     }
     return 0.0f;
 }
+
+matcoo* matcoo_sm(matcoo* m, float a) {
+    ll_float_node *c = m->vals->first;
+    while (c) {
+        c->value *= a;
+        c = c->next;
+    }
+    return m;
+}
+
+float matcoo_trace(matcoo* m) {
+    if (m->dimY != m->dimX) {
+        assert("Trace is only well defined for square matrices." && 0);
+    }
+    ll_float_node *cv = m->vals->first;
+    ll_float_node *ci = m->is->first;
+    ll_float_node *cj = m->js->first;
+    float sum = 0.0f;
+    while (cv) {
+        if (ci->value == cj->value) {
+            sum += cv->value;
+        }
+        cv = cv->next;
+        ci = ci->next;
+        cj = cj->next;
+    }
+    return sum;
+}
+
+matcoo* matcoo_add(matcoo* m1, matcoo* m2) {
+    ll_float_node *c1 = m1->vals->first;
+    ll_float_node *i1 = m1->is->first;
+    ll_float_node *j1 = m1->js->first;
+    ll_float_node *c2 = m2->vals->first;
+    ll_float_node *i2 = m2->is->first;
+    ll_float_node *j2 = m2->js->first;
+    // go over every non-0 value in m1
+    while (c1) {
+        // go over every non-0 value in m2
+        while (c2) {
+            printf("checking i,j pair (%d, %d) == (%d, %d)\n", (int)i1->value, (int)j1->value, (int)i2->value, (int)j2->value);
+            // if we have a match, add them and store in m1
+            if (i1->value == i2->value && j1->value == j2->value) {
+                printf("\tfound a matching i,j pair (%d, %d)\n", (int)i1->value, (int)j1->value);
+                c1->value += c2->value;
+                // remove the used value from m2 so we dont check them again
+                ll_float_remove(c2);
+                ll_float_remove(i2);
+                ll_float_remove(j2);
+                // reset to start of m2 and break
+                c2 = m2->vals->first;
+                i2 = m2->is->first;
+                j2 = m2->js->first;
+                break;
+            }
+            c2 = c2->next;
+            i2 = i2->next;
+            j2 = j2->next;
+        }
+        c1 = c1->next;
+        i1 = i1->next;
+        j1 = j1->next;
+    }
+    return m1;
+}
+
+matcoo* matcoo_transpose(matcoo* m) {
+    ll_float_node *i = m->is->first;
+    ll_float_node *j = m->js->first;
+    while (i) {
+        // swap i and j vals to transpose
+        float oldi = i->value;
+        i->value = j->value;
+        j->value = oldi;
+        i = i->next;
+        j = j->next;
+    }
+    return m;
+}
