@@ -15,9 +15,10 @@ void timer_start() {
     clock_gettime(CLOCK_MONOTONIC, &tstart);
 }
 
-float timer_end() {
+double timer_end() {
     clock_gettime(CLOCK_MONOTONIC, &tend);
-    return ((double) tend.tv_sec + 1.0e-9 * tend.tv_nsec) - ((double) tstart.tv_sec + 1.0e-9 * tstart.tv_nsec);
+    return ((double) tend.tv_sec + 1.0e-9 * (double) tend.tv_nsec) -
+           ((double) tstart.tv_sec + 1.0e-9 * (double) tstart.tv_nsec);
 }
 
 bool compare_coo_csr(matcoo *mcoo, matcsr *mcsr) {
@@ -28,7 +29,7 @@ bool compare_coo_csr(matcoo *mcoo, matcsr *mcsr) {
     for (int i = 0; i < mcoo->dimY; i++) {
         for (int j = 0; j < mcoo->dimX; j++) {
             float v1 = matcoo_get(mcoo, i, j);
-            float v2 = matcsr_get(mcsr, i, j);
+            float v2 = matcsr_get(mcsr, i, j, 0);
             if (v1 != v2) {
                 return false;
             }
@@ -45,7 +46,7 @@ bool compare_coo_csc(matcoo *mcoo, matcsc *mcsc) {
     for (int j = 0; j < mcoo->dimX; j++) {
         for (int i = 0; i < mcoo->dimY; i++) {
             float v1 = matcoo_get(mcoo, i, j);
-            float v2 = matcsc_get(mcsc, j, i);
+            float v2 = matcsc_get(mcsc, j, i, 0);
             if (v1 != v2) {
                 return false;
             }
@@ -139,14 +140,15 @@ matcoo *mat_multiply(matcsr *m1, matcsc *m2) {
     }
     matcoo *mres = matcoo_zeroes(m2->dimX, m1->dimY);
     int i;
-    #pragma omp parallel for num_threads(8) private(i)
+#pragma omp parallel for num_threads(16) private(i) shared(mres, m1, m2) default(none) collapse(2)
     for (i = 0; i < mres->dimY; i++) {
-        printf("%d\n", omp_get_num_threads());
         for (int j = 0; j < mres->dimX; j++) {
             float sum = 0.0f;
+            int found1 = 0;
+            int found2 = 0;
             for (int k = 0; k < m1->dimX; k++) {
-                float v1 = matcsr_get(m1, i, k);
-                float v2 = matcsc_get(m2, j, k);
+                float v1 = matcsr_get(m1, i, k, &found1);
+                float v2 = matcsc_get(m2, j, k, &found2);
                 sum += v1 * v2;
             }
             matcoo_build(mres, sum, i, j);
@@ -413,21 +415,21 @@ int time_csr(const char *f1, const char *f2) {
     timer_start();
     matcsr *m_init = matcsr_fromfile(f1);
     printf("CSR Load: %.4f\n", timer_end());
-    matcsr_free(m_init);
+//    matcsr_free(m_init);
 
     // scalar multiplication
     matcsr *m_sm = matcsr_fromfile(f1);
     timer_start();
     matcsr *m_sm_res = matcsr_sm(m_sm, 2);
     printf("CSR sm: %.4f\n", timer_end());
-    matcsr_free(m_sm_res);
+//    matcsr_free(m_sm_res);
 
     // trace
     matcsr *m_trace = matcsr_fromfile(f1);
     timer_start();
     matcsr_trace(m_trace);
     printf("CSR trace: %.4f\n", timer_end());
-    matcsr_free(m_trace);
+//    matcsr_free(m_trace);
 
     // add
     matcsr *m_add1 = matcsr_fromfile(f1);
@@ -435,8 +437,8 @@ int time_csr(const char *f1, const char *f2) {
     timer_start();
     matcsr *m_add_res = matcsr_add(m_add1, m_add2);
     printf("CSR add: %.4f\n", timer_end());
-    matcsr_free(m_add_res);
-    matcsr_free(m_add2);
+//    matcsr_free(m_add_res);
+//    matcsr_free(m_add2);
 
     // transpose
 //    matcsr *m_transpose = matcsr_fromfile(f1);
@@ -458,8 +460,8 @@ int time_csr(const char *f1, const char *f2) {
     timer_start();
     matcoo *mm_res = mat_multiply(mm_csr, mm_csc);
     printf("CSR x CSC multiply: %.4f\n", timer_end());
-    matcsr_free(mm_csr);
-    matcsc_free(mm_csc);
+//    matcsr_free(mm_csr);
+//    matcsc_free(mm_csc);
     return 0;
 }
 

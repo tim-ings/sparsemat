@@ -49,15 +49,17 @@ matcsc *matcsc_zeroes(int dx, int dy) {
     return m;
 }
 
-float matcsc_get(matcsc *m, int i, int j) {
+float matcsc_get(matcsc *m, int i, int j, int *col_skip) {
     int ia = (int) list_get(m->ia, j); // the number of values in nnz to skip to get to col i
     int ia_next = (int) list_get(m->ia, j + 1); // the number of values in nnz to skip to get to col i + 1
-    int els_this_col = ia_next - ia;
-    if (els_this_col == 0) {
-        return 0.0f;
-    }
+    if (ia_next - ia == 0)
+        return 0.0f; // there are no nnz's this row
+    if (col_skip)
+        ia += *col_skip;
     for (int k = ia; k < ia_next; k++) {
         if ((int) list_get(m->ja, k) == i) {
+            if (col_skip)
+                *col_skip += 1;
             return list_get(m->nnz, k);
         }
     }
@@ -88,7 +90,7 @@ void matcsc_rawprint(matcsc *m) {
 void matcsc_print(matcsc *m) {
     for (int j = 0; j < m->dimX; j++) {
         for (int i = 0; i < m->dimY; i++) {
-            printf("%.2f\t\t", matcsc_get(m, i, j));
+            printf("%.2f\t\t", matcsc_get(m, i, j, 0));
         }
         printf("\n");
     }
@@ -109,7 +111,7 @@ float matcsc_trace(matcsc *m) {
     }
     float trace = 0;
     for (int i = 0; i < m->dimY; i++) {
-        trace += matcsc_get(m, i, i);
+        trace += matcsc_get(m, i, i, 0);
     }
     return trace;
 }
@@ -122,9 +124,10 @@ matcsc *matcsc_add(matcsc *m1, matcsc *m2) {
     matcsc *mres = matcsc_zeroes(m1->dimX, m1->dimY);
     for (int j = 0; j < m1->dimX; j++) {
         // TODO: dont need to check rows where ia is same as last ia
+        int found1, found2;
         for (int i = 0; i < m1->dimY; i++) {
-            float v1 = matcsc_get(m1, i, j);
-            float v2 = matcsc_get(m1, i, j);
+            float v1 = matcsc_get(m1, i, j, &found1);
+            float v2 = matcsc_get(m1, i, j, &found2);
             float r = v1 + v2;
             if (r != 0) {
                 list_append(&mres->nnz, r); // add the non zero value to nnz

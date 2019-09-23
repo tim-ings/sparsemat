@@ -24,7 +24,7 @@ void matcsc_free(matcsc *m);
 
 matcsc *matcsc_zeroes(int dx, int dy);
 
-float matcsc_get(matcsc *m, int i, int j);
+float matcsc_get(matcsc *m, int i, int j, int* col_skip);
 
 void matcsc_rawprint(matcsc *m);
 

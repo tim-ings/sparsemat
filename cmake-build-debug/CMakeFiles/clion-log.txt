@@ -1,6 +1,6 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/tim/repo/sparsemat
--- Could NOT find OpenMP_C (missing: OpenMP_C_FLAGS OpenMP_C_LIB_NAMES) 
--- Could NOT find OpenMP (missing: OpenMP_C_FOUND) 
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/usr/local/bin/gcc-9 -G "CodeBlocks - Unix Makefiles" /Users/tim/repo/sparsemat
+-- Checking OpenMP
+Found OpenMP!
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /Users/tim/repo/sparsemat/cmake-build-debug

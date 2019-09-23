@@ -11,7 +11,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/Users/tim/repo/sparsemat/matcsc.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/matcsc.c.o"
   "/Users/tim/repo/sparsemat/matcsr.c" "/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles/sparsemat.dir/matcsr.c.o"
   )
-set(CMAKE_C_COMPILER_ID "AppleClang")
+set(CMAKE_C_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH

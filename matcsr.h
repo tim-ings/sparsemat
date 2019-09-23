@@ -7,6 +7,7 @@
 #include "list.h"
 #include <math.h>
 #include <assert.h>
+#include <stdbool.h>
 
 
 typedef struct matcsr_ matcsr;
@@ -26,7 +27,7 @@ void matcsr_free(matcsr *m);
 
 matcsr *matcsr_zeroes(int dx, int dy);
 
-float matcsr_get(matcsr *m, int mi, int mj);
+float matcsr_get(matcsr *m, int i, int j, int *row_skip);
 
 void matcsr_rawprint(matcsr *m);
 

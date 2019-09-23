@@ -5,11 +5,12 @@
 #include <stdlib.h>
 #include <memory.h>
 
+#define LIST_PART_COUNT 100
 
 typedef struct list_ list;
 struct list_ {
     float **parts;
-    int parts_index; // the end of the parts array, used to append new parts
+    int parts_length;
     int length; // the current length of the list (sum of all parts)
     int capacity; // the current max length of the list (sum of all parts)
     int increment; // the length of each part

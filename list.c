@@ -2,23 +2,24 @@
 
 
 list *list_new(int capacity, int increment) {
-    list *l = (list *) malloc(sizeof(list) * capacity);
-    l->parts = (float **) malloc(sizeof(float *) * 100);
+    list *l = malloc(sizeof(list) * capacity);
+    l->parts = malloc(sizeof(float*) * LIST_PART_COUNT);
+    l->parts_length = 0;
     // init some initial parts so we meet requested capacity
     for (int i = 0; i < capacity / increment + 1; i++) {
-        l->parts[i] = (float *) malloc(sizeof(float) * increment);
+        l->parts[i] = malloc(sizeof(float) * increment);
+        l->parts_length++;
     }
     l->length = 0;
     l->capacity = capacity;
     l->increment = increment;
-    l->parts_index = 0;
     return l;
 }
 
 void list_free(list *l) {
-    // init some initial parts so we meet requested capacity
-    for (int i = 0; i < l->parts_index; i++) {
-        free(l->parts[i]);
+    for (int i = 0; i < l->increment; i++) { // each part is inc long
+        if (l->parts[i])
+            free(l->parts[i]);
     }
     free(l->parts);
     free(l);
@@ -39,14 +40,14 @@ void list_set(list *lst, int i, float val) {
 
 void list_append(list **l, float val) {
     list *lst = *l;
-    if (lst->length >= lst->increment * lst->parts_index) { // expand the array if we need to
+    if (lst->length >= lst->increment * lst->parts_length) { // expand the array if we need to
         list_expand(lst);
     }
     list_set(lst, lst->length++, val);
 }
 
 void list_expand(list *lst) {
-    lst->parts[lst->parts_index++] = (float *) malloc(sizeof(float) * lst->increment);
+    lst->parts[lst->parts_length++] = (float *) malloc(sizeof(float) * lst->increment);
     lst->capacity += lst->increment;
 }
 
