@@ -720,55 +720,161 @@ int time_csr_int(const char *f1, const char *f2) {
     return 0;
 }
 
-bool is_float(char* filepath) {
+bool is_float(char *filepath) {
     char line[10];
     FILE *fp = fopen(filepath, "r");
     if (fp) {
         fgets(line, 10, fp);
-        printf("Data from the file:\n%s", line);
         fclose(fp);
+        return line[0] == 'f';
     }
 }
 
-int run_sm(char* filepath) {
+int run_sm(char *filepath, float a, bool print_result) {
     if (is_float(filepath)) {
         matcoo *m = matcoo_fromfile(filepath);
         timer_start();
-        m = matcoo_sm(m, 2);
-        printf("Operation completed in %.4fs\n", timer_end());
-        matcoo_print(m);
+        m = matcoo_sm(m, a);
+        printf("Scalar multiplication completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_print(m);
+        }
         matcoo_free(m);
     } else {
         matcoo_i *m = matcoo_i_fromfile(filepath);
         timer_start();
-        m = matcoo_i_sm(m, 2);
-        printf("Operation completed in %.4fs\n", timer_end());
-        matcoo_i_print(m);
-//        matcsr_i_free(m);
+        m = matcoo_i_sm(m, a);
+        printf("Scalar multiplication completed as int in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_i_print(m);
+        }
+        matcoo_i_free(m);
+    }
+}
+
+int run_tr(char *filepath, bool print_result) {
+    if (is_float(filepath)) {
+        matcoo *m = matcoo_fromfile(filepath);
+        timer_start();
+        float t = matcoo_trace(m);
+        printf("Trace completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            printf("trace = %.2f\n", t);
+        }
+        matcoo_free(m);
+    } else {
+        matcoo_i *m = matcoo_i_fromfile(filepath);
+        timer_start();
+        int t = matcoo_i_trace(m);
+        printf("Trace (i) completed as int in %.4fs\n", timer_end());
+        if (print_result) {
+            printf("trace = %d\n", t);
+        }
+        matcoo_i_free(m);
+    }
+}
+
+int run_ad(char *filepath1, char *filepath2, bool print_result) {
+    if (is_float(filepath1)) {
+        matcoo *m1 = matcoo_fromfile(filepath1);
+        matcoo *m2 = matcoo_fromfile(filepath2);
+        timer_start();
+        matcoo *mres = matcoo_add(m1, m2);
+        printf("Add completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_print(mres);
+        }
+        matcoo_free(m1);
+        matcoo_free(m2);
+    } else {
+        matcoo_i *m1 = matcoo_i_fromfile(filepath1);
+        matcoo_i *m2 = matcoo_i_fromfile(filepath2);
+        timer_start();
+        matcoo_i *mres = matcoo_i_add(m1, m2);
+        printf("Add completed as int in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_i_print(mres);
+        }
+        matcoo_i_free(m1);
+        matcoo_i_free(m2);
+    }
+}
+
+int run_ts(char *filepath, bool print_result) {
+    if (is_float(filepath)) {
+        matcoo *m = matcoo_fromfile(filepath);
+        timer_start();
+        matcoo *mres = matcoo_transpose(m);
+        printf("Transpose completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_print(mres);
+        }
+        matcoo_free(m);
+    } else {
+        matcoo_i *m = matcoo_i_fromfile(filepath);
+        timer_start();
+        matcoo_i *mres = matcoo_i_transpose(m);
+        printf("Transpose completed as int in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_i_print(mres);
+        }
+        matcoo_i_free(m);
+    }
+}
+
+int run_mm(char *filepath1, char *filepath2, bool print_result) {
+    if (is_float(filepath1)) {
+        matcsr *m1 = matcsr_fromfile(filepath1);
+        matcsc *m2 = matcsc_fromfile(filepath2);
+        timer_start();
+        matcoo *mres = mat_multiply(m1, m2);
+        printf("Multiplication completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_print(mres);
+        }
+        matcsr_free(m1);
+        matcsc_free(m2);
+    } else {
+        matcsr_i *m1 = matcsr_i_fromfile(filepath1);
+        matcsc_i *m2 = matcsc_i_fromfile(filepath2);
+        timer_start();
+        matcoo_i *mres = mat_multiply_i(m1, m2);
+        printf("Multiplication completed as float in %.4fs\n", timer_end());
+        if (print_result) {
+            matcoo_i_print(mres);
+        }
+        matcsr_i_free(m1);
+        matcsc_i_free(m2);
     }
 }
 
 int print_usage() {
     printf("Usage:\n"
+           "\tOperations:\n"
            "\t--sm \tScalar multiplication\n"
            "\t--tr \tTrace\n"
            "\t--ad \tAddition\n"
            "\t--ts \tTranspose\n"
-           "\t--mm \tMatrix multiplication\n");
+           "\t--mm \tMatrix multiplication\n"
+           "\n"
+           "\tOptionals:\n"
+           "\t-p  \tPrints result to stdout");
 }
 
 int main(int argc, char *argv[]) {
+    // gather info about the arguments
     char operation = '0';
     int file_count = 1;
-    char* file1 = NULL;
-    char* file2 = NULL;
+    char *file1 = NULL;
+    char *file2 = NULL;
+    bool print_result = false;
     // scalar multiplication
     if (argc < 2) {
         print_usage();
     } else {
         // go over every arg
         for (int i = 0; i < argc; i++) {
-            char* v = argv[i];
+            char *v = argv[i];
             if (strcmp(v, "--sm") == 0) {
                 operation = 's';
             } else if (strcmp(v, "--tr") == 0) {
@@ -782,33 +888,44 @@ int main(int argc, char *argv[]) {
                 operation = 'm';
                 file_count = 2;
             } else if (strcmp(v, "-f") == 0) {
-                file1 = argv[i + 1];
+                file1 = argv[++i]; // if the next arg is a file, then its not an option
                 if (file_count > 1) {
-                    file2 = argv[i + 2];
+                    file2 = argv[++i]; // handle a second file
                 }
+            } else if (strcmp(v, "-p") == 0) {
+                print_result = true;
             }
         }
     }
-    if (file_count == 2) {
-        printf("Running operation %c on %d files: %s and %s\n", operation, file_count, file1, file2);
-    } else {
-        printf("Running operation %c on %d files: %s\n", operation, file_count, file1);
+
+    if (operation == '0') {
+        printf("Error: Unknown operation\n");
+        print_usage();
+    } else if (!file1) {
+        printf("Error: No files supplied, supply files with -f a.in [ b.in ]\n");
+        print_usage();
     }
+
+    // run an operation based on the arguments
     switch (operation) {
         case 's':
-            run_sm(file1);
+            run_sm(file1, 2, print_result);
+            break;
+        case 'r':
+            run_tr(file1, print_result);
+            break;
+        case 'a':
+            run_ad(file1, file2, print_result);
+            break;
+        case 't':
+            run_ts(file1, print_result);
+            break;
+        case 'm':
+            run_mm(file1, file2, print_result);
             break;
         default:
-            break;
+            print_usage();
+            return EXIT_FAILURE;
     }
-
-
-//    const char *f1 = "data/float123.in";
-//    const char *f2 = "data/float123.in";
-//    test_all_float(f1, f2);
-//
-//    time_csr_float("data/float256.in", "data/float256.in");
-//    time_csr_int("data/int256.in", "data/int256.in");
-
     return EXIT_SUCCESS;
 }
