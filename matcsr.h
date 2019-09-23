@@ -33,7 +33,7 @@ void matcsr_rawprint(matcsr *m);
 
 void matcsr_print(matcsr *m);
 
-matcsr *matcsr_sm(matcsr *m, float s);
+matcsr *matcsr_sm(matcsr *m, const float s, int thread_count);
 
 float matcsr_trace(matcsr *m);
 

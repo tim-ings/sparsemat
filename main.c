@@ -11,6 +11,8 @@
 #include "matcsc_i.h"
 
 
+#define STUDENT_NUMBER 21716194
+
 struct timespec tstart = {0, 0}, tend = {0, 0};
 
 void timer_start() {
@@ -253,13 +255,13 @@ matcsc_i *matcsc_i_fromfile(const char *fp) {
     return m;
 }
 
-matcoo *mat_multiply(matcsr *m1, matcsc *m2) {
+matcoo *mat_multiply(matcsr *m1, matcsc *m2, int thread_count) {
     if (m1->dimX != m2->dimY) {
         assert("Multiplication is only defined for two matrices where A.dimX == B.dimY" && 0);
     }
     matcoo *mres = matcoo_zeroes(m2->dimX, m1->dimY);
     int i;
-//#pragma omp parallel for num_threads(16) private(i, found1, found2) shared(mres, m1, m2) default(none) collapse(2)
+//#pragma omp parallel for num_threads(thread_count) private(i) shared(mres, m1, m2) default(none) collapse(2)
     for (i = 0; i < mres->dimY; i++) {
         for (int j = 0; j < mres->dimX; j++) {
             float sum = 0.0f;
@@ -274,13 +276,14 @@ matcoo *mat_multiply(matcsr *m1, matcsc *m2) {
     return mres;
 }
 
-matcoo_i *mat_multiply_i(matcsr_i *m1, matcsc_i *m2) {
+matcoo_i *mat_multiply_i(matcsr_i *m1, matcsc_i *m2, int thread_count) {
     if (m1->dimX != m2->dimY) {
         assert("Multiplication is only defined for two matrices where A.dimX == B.dimY" && 0);
     }
     matcoo_i *mres = matcoo_i_zeroes(m2->dimX, m1->dimY);
     int i;
-#pragma omp parallel for num_threads(16) private(i) shared(mres, m1, m2) default(none) collapse(2)
+    int threads = thread_count == -1 ? 8 : thread_count;
+#pragma omp parallel for num_threads(threads) private(i) shared(mres, m1, m2) default(none) collapse(2)
     for (i = 0; i < mres->dimY; i++) {
         for (int j = 0; j < mres->dimX; j++) {
             int sum = 0;
@@ -297,130 +300,8 @@ matcoo_i *mat_multiply_i(matcsr_i *m1, matcsc_i *m2) {
     return mres;
 }
 
-int test_coo(const char *f1, const char *f2) {
-    printf("\tTest COO: Load:\n");
-    matcoo *m_init = matcoo_fromfile(f1);
-    matcoo_print(m_init);
-    matcoo_free(m_init);
-
-    printf("\tTest COO: Scalar Multiplication:\n");
-    matcoo *m_sm = matcoo_fromfile(f1);
-    matcoo *m_sm_res = matcoo_sm(m_sm, 2);
-    matcoo_print(m_sm_res);
-    matcoo_free(m_sm_res);
-
-    printf("\tTest COO: Trace:\n");
-    matcoo *m_trace = matcoo_fromfile(f1);
-    float t = matcoo_trace(m_trace);
-    printf("t=%.2f\n", t);
-    matcoo_free(m_trace);
-
-    printf("\tTest COO: Add:\n");
-    matcoo *m_add1 = matcoo_fromfile(f1);
-    matcoo *m_add2 = matcoo_fromfile(f2);
-    matcoo *m_add_res = matcoo_add(m_add1, m_add2);
-    matcoo_print(m_add_res);
-    matcoo_free(m_add_res);
-    matcoo_free(m_add2);
-
-    printf("\tTest COO: Transpose:\n");
-    matcoo *m_transpose = matcoo_fromfile(f1);
-    matcoo *m_transpose_res = matcoo_transpose(m_transpose);
-    matcoo_print(m_transpose_res);
-    matcoo_free(m_transpose_res);
-
-    printf("\tTest COO: Multiply:\n");
-    matcoo *m_multiply1 = matcoo_fromfile(f1);
-    matcoo *m_multiply2 = matcoo_fromfile(f2);
-    matcoo *m_multiply_res = matcoo_multiply(m_multiply1, m_multiply2);
-    matcoo_print(m_multiply_res);
-    matcoo_free(m_multiply_res);
-    return 0;
-}
-
-int test_csr(const char *f1, const char *f2) {
-    printf("\tTest CSR: Load:\n");
-    matcsr *m_init = matcsr_fromfile(f1);
-    matcsr_print(m_init);
-    matcsr_free(m_init);
-
-    printf("\tTest CSR: Scalar Multiplication:\n");
-    matcsr *m_sm = matcsr_fromfile(f1);
-    matcsr *m_sm_res = matcsr_sm(m_sm, 2);
-    matcsr_print(m_sm_res);
-    matcsr_free(m_sm_res);
-
-    printf("\tTest CSR: Trace:\n");
-    matcsr *m_trace = matcsr_fromfile(f1);
-    float t = matcsr_trace(m_trace);
-    printf("t=%.2f\n", t);
-    matcsr_free(m_trace);
-
-    printf("\tTest CSR: Add:\n");
-    matcsr *m_add1 = matcsr_fromfile(f1);
-    matcsr *m_add2 = matcsr_fromfile(f2);
-    matcsr *m_add_res = matcsr_add(m_add1, m_add2);
-    matcsr_print(m_add_res);
-    matcsr_free(m_add_res);
-    matcsr_free(m_add2);
-
-//    printf("\tTest CSR: Transpose:\n");
-//    matcsr *m_transpose = matcsr_fromfile(f1);
-//    matcsr *m_transpose_res = matcsr_transpose(m_transpose);
-//    matcsr_print(m_transpose_res);
-//    matcsr_free(m_transpose_res);
-
-//    printf("\tTest CSR: Multiply:\n");
-//    matcsr *m_multiply1 = matcsr_fromfile(f1);
-//    matcsr *m_multiply2 = matcsr_fromfile(f2);
-//    matcsr *m_multiply_res = matcsr_multiply(m_multiply1, m_multiply2);
-//    matcsr_print(m_multiply_res);
-//    matcsr_free(m_multiply_res);
-    return 0;
-}
-
-int test_csc(const char *f1, const char *f2) {
-    printf("\tTest CSC: Load:\n");
-    matcsc *m_init = matcsc_fromfile(f1);
-    matcsc_print(m_init);
-    matcsc_free(m_init);
-
-    printf("\tTest CSC: Scalar Multiplication:\n");
-    matcsc *m_sm = matcsc_fromfile(f1);
-    matcsc *m_sm_res = matcsc_sm(m_sm, 2);
-    matcsc_print(m_sm_res);
-    matcsc_free(m_sm_res);
-
-    printf("\tTest CSC: Trace:\n");
-    matcsc *m_trace = matcsc_fromfile(f1);
-    float t = matcsc_trace(m_trace);
-    printf("t=%.2f\n", t);
-    matcsc_free(m_trace);
-
-    printf("\tTest CSC: Add:\n");
-    matcsc *m_add1 = matcsc_fromfile(f1);
-    matcsc *m_add2 = matcsc_fromfile(f2);
-    matcsc *m_add_res = matcsc_add(m_add1, m_add2);
-    matcsc_print(m_add_res);
-    matcsc_free(m_add_res);
-    matcsc_free(m_add2);
-
-//    printf("\tTest CSC: Transpose:\n");
-//    matcsc *m_transpose = matcsc_fromfile(f1);
-//    matcsc *m_transpose_res = matcsc_transpose(m_transpose);
-//    matcsc_print(m_transpose_res);
-//    matcsc_free(m_transpose_res);
-//
-//    printf("\tTest CSC: Multiply:\n");
-//    matcsc *m_multiply1 = matcsc_fromfile(f1);
-//    matcsc *m_multiply2 = matcsc_fromfile(f2);
-//    matcsc *m_multiply_res = matcsc_multiply(m_multiply1, m_multiply2);
-//    matcsc_print(m_multiply_res);
-//    matcsc_free(m_multiply_res);
-    return 0;
-}
-
-int test_all_float(const char *f1, const char *f2) {
+// tests correctness of each matrix implementation as float
+int test_correctness(const char *f1, const char *f2) {
     // loading
     matcoo *init_coo = matcoo_fromfile(f1);
     matcsr *init_csr = matcsr_fromfile(f1);
@@ -437,7 +318,7 @@ int test_all_float(const char *f1, const char *f2) {
     matcsr *sm_csr = matcsr_fromfile(f1);
     matcsc *sm_csc = matcsc_fromfile(f1);
     sm_coo = matcoo_sm(sm_coo, a);
-    sm_csr = matcsr_sm(sm_csr, a);
+    sm_csr = matcsr_sm(sm_csr, a, 8);
     sm_csc = matcsc_sm(sm_csc, a);
     assert(compare_coo_csr(sm_coo, sm_csr));
     assert(compare_coo_csc(sm_coo, sm_csc));
@@ -480,11 +361,7 @@ int test_all_float(const char *f1, const char *f2) {
     // transpose
     matcoo *coo_transpose = matcoo_fromfile(f1);
     matcoo *coo_transpose_res = matcoo_transpose(coo_transpose);
-//    matcsr *csr_transpose = matcsr_fromfile(f1);
-//    matcsr *csr_transpose_res = matcsr_transpose(csr_transpose);
-//    assert(compare_coo_csr(coo_transpose_res, csr_transpose_res));
     matcoo_free(coo_transpose);
-//    matcsr_free(csr_transpose);
 
     // multiply
     matcoo *coo_multi1 = matcoo_fromfile(f1);
@@ -492,7 +369,7 @@ int test_all_float(const char *f1, const char *f2) {
     matcoo *coo_multi_res = matcoo_multiply(coo_multi1, coo_multi2);
     matcsr *csr_multi1 = matcsr_fromfile(f1);
     matcsc *csc_multi2 = matcsc_fromfile(f2);
-    matcoo *coo_multi_res2 = mat_multiply(csr_multi1, csc_multi2);
+    matcoo *coo_multi_res2 = mat_multiply(csr_multi1, csc_multi2, -1);
     assert(matcoo_equals(coo_multi_res, coo_multi_res2));
     matcoo_free(coo_multi1);
     matcoo_free(coo_multi2);
@@ -503,7 +380,8 @@ int test_all_float(const char *f1, const char *f2) {
     return 0;
 }
 
-int test_all_int(const char *f1, const char *f2) {
+// tests correctness of each matrix implementation as int
+int test_correctness_i(const char *f1, const char *f2) {
     // loading
     matcoo_i *init_coo = matcoo_i_fromfile(f1);
     matcsr_i *init_csr = matcsr_i_fromfile(f1);
@@ -563,11 +441,7 @@ int test_all_int(const char *f1, const char *f2) {
     // transpose
     matcoo_i *coo_transpose = matcoo_i_fromfile(f1);
     matcoo_i *coo_transpose_res = matcoo_i_transpose(coo_transpose);
-//    matcsr *csr_transpose = matcsr_fromfile(f1);
-//    matcsr *csr_transpose_res = matcsr_transpose(csr_transpose);
-//    assert(compare_coo_csr(coo_transpose_res, csr_transpose_res));
     matcoo_i_free(coo_transpose);
-//    matcsr_free(csr_transpose);
 
     // multiply
     matcoo_i *coo_multi1 = matcoo_i_fromfile(f1);
@@ -575,7 +449,7 @@ int test_all_int(const char *f1, const char *f2) {
     matcoo_i *coo_multi_res = matcoo_i_multiply(coo_multi1, coo_multi2);
     matcsr_i *csr_multi1 = matcsr_i_fromfile(f1);
     matcsc_i *csc_multi2 = matcsc_i_fromfile(f2);
-    matcoo_i *coo_multi_res2 = mat_multiply_i(csr_multi1, csc_multi2);
+    matcoo_i *coo_multi_res2 = mat_multiply_i(csr_multi1, csc_multi2, -8);
     assert(matcoo_i_equals(coo_multi_res, coo_multi_res2));
     matcoo_i_free(coo_multi1);
     matcoo_i_free(coo_multi2);
@@ -586,140 +460,7 @@ int test_all_int(const char *f1, const char *f2) {
     return 0;
 }
 
-int time_coo(const char *f1, const char *f2) {
-    // load
-    timer_start();
-    matcoo *m_init = matcoo_fromfile(f1);
-    printf("COO Load: %.4f\n", timer_end());
-    matcoo_free(m_init);
-
-    // scalar multiplication
-    matcoo *m_sm = matcoo_fromfile(f1);
-    timer_start();
-    matcoo *m_sm_res = matcoo_sm(m_sm, 2);
-    printf("COO sm: %.4f\n", timer_end());
-    matcoo_free(m_sm_res);
-
-    // trace
-    matcoo *m_trace = matcoo_fromfile(f1);
-    timer_start();
-    matcoo_trace(m_trace);
-    printf("COO trace: %.4f\n", timer_end());
-    matcoo_free(m_trace);
-
-    // add
-    matcoo *m_add1 = matcoo_fromfile(f1);
-    matcoo *m_add2 = matcoo_fromfile(f2);
-    timer_start();
-    matcoo *m_add_res = matcoo_add(m_add1, m_add2);
-    printf("COO add: %.4f\n", timer_end());
-    matcoo_free(m_add_res);
-    matcoo_free(m_add2);
-
-    // transpose
-    matcoo *m_transpose = matcoo_fromfile(f1);
-    timer_start();
-    matcoo *m_transpose_res = matcoo_transpose(m_transpose);
-    printf("COO transpose: %.4f\n", timer_end());
-    matcoo_free(m_transpose_res);
-
-    // multiply
-    matcoo *m_multiply1 = matcoo_fromfile(f1);
-    matcoo *m_multiply2 = matcoo_fromfile(f2);
-    timer_start();
-    matcoo *m_multiply_res = matcoo_multiply(m_multiply1, m_multiply2);
-    printf("COO multiply: %.4f\n", timer_end());
-    matcoo_free(m_multiply_res);
-    return 0;
-}
-
-int time_csr_float(const char *f1, const char *f2) {
-    // load
-    timer_start();
-    matcsr *m_init = matcsr_fromfile(f1);
-    printf("CSR Load: %.4f\n", timer_end());
-//    matcsr_print(m_init);
-//    matcsr_free(m_init);
-
-    // scalar multiplication
-    matcsr *m_sm = matcsr_fromfile(f1);
-    timer_start();
-    matcsr *m_sm_res = matcsr_sm(m_sm, 2);
-    printf("CSR sm: %.4f\n", timer_end());
-//    matcsr_free(m_sm_res);
-
-    // trace
-    matcsr *m_trace = matcsr_fromfile(f1);
-    timer_start();
-    matcsr_trace(m_trace);
-    printf("CSR trace: %.4f\n", timer_end());
-//    matcsr_free(m_trace);
-
-    // add
-    matcsr *m_add1 = matcsr_fromfile(f1);
-    matcsr *m_add2 = matcsr_fromfile(f2);
-    timer_start();
-    matcsr *m_add_res = matcsr_add(m_add1, m_add2);
-    printf("CSR add: %.4f\n", timer_end());
-//    matcsr_free(m_add_res);
-//    matcsr_free(m_add2);
-
-    matcsr *mm_csr = matcsr_fromfile(f1);
-    matcsc *mm_csc = matcsc_fromfile(f2);
-    timer_start();
-    matcoo *mm_res = mat_multiply(mm_csr, mm_csc);
-    printf("CSR x CSC multiply: %.4f\n", timer_end());
-//    matcsr_free(mm_csr);
-//    matcsc_free(mm_csc);
-
-
-    printf("CSR FLOAT PASSED ALL TESTS\n");
-    return 0;
-}
-
-int time_csr_int(const char *f1, const char *f2) {
-    // load
-    timer_start();
-    matcsr_i *m_init = matcsr_i_fromfile(f1);
-    printf("CSR INT Load: %.4f\n", timer_end());
-//    matcsr_i_print(m_init);
-//    matcsr_free(m_init);
-
-    // scalar multiplication
-    matcsr_i *m_sm = matcsr_i_fromfile(f1);
-    timer_start();
-    matcsr_i *m_sm_res = matcsr_i_sm(m_sm, 2);
-    printf("CSR INT sm: %.4f\n", timer_end());
-//    matcsr_i_free(m_sm_res);
-
-    // trace
-    matcsr_i *m_trace = matcsr_i_fromfile(f1);
-    timer_start();
-    matcsr_i_trace(m_trace);
-    printf("CSR INT trace: %.4f\n", timer_end());
-//    matcsr_i_free(m_trace);
-
-    // add
-    matcsr_i *m_add1 = matcsr_i_fromfile(f1);
-    matcsr_i *m_add2 = matcsr_i_fromfile(f2);
-    timer_start();
-    matcsr_i *m_add_res = matcsr_i_add(m_add1, m_add2);
-    printf("CSR INT add: %.4f\n", timer_end());
-//    matcsr_i_free(m_add_res);
-//    matcsr_i_free(m_add2);
-
-    matcsr_i *mm_csr = matcsr_i_fromfile(f1);
-    matcsc_i *mm_csc = matcsc_i_fromfile(f2);
-    timer_start();
-    matcoo_i *mm_res = mat_multiply_i(mm_csr, mm_csc);
-    printf("CSR INT x CSC multiply: %.4f\n", timer_end());
-//    matcsr_i_free(mm_csr);
-//    matcsc_i_free(mm_csc);
-
-    printf("CSR INT PASSED ALL TESTS\n");
-    return 0;
-}
-
+// checks if the given .in file is int or float
 bool is_float(char *filepath) {
     char line[10];
     FILE *fp = fopen(filepath, "r");
@@ -730,125 +471,346 @@ bool is_float(char *filepath) {
     }
 }
 
-int run_sm(char *filepath, float a, bool print_result) {
+char *get_log_name(const char* operation) {
+    char *filename = malloc(sizeof(char) * 256);
+    time_t t = time(NULL);
+    struct tm mytm = *localtime(&t);
+    sprintf(filename, "%d_%d%d%d_%d_%s.out", STUDENT_NUMBER, mytm.tm_mday, mytm.tm_mon + 1, mytm.tm_year + 1900,
+            mytm.tm_sec * 1000, operation);
+    return filename;
+}
+
+// runs the scalar multiplication operation
+void run_sm(char *filepath, float a, bool should_print, bool should_log, int thread_count) {
     if (is_float(filepath)) {
         matcoo *m = matcoo_fromfile(filepath);
         timer_start();
         m = matcoo_sm(m, a);
-        printf("Scalar multiplication completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Scalar multiplication completed as float in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_print(m);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("sm"), "w");
+            fprintf(f, "sm %.2f\n", a);
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%d\n", m->dimX);
+            fprintf(f, "%d\n", m->dimY);
+            for (int i = 0; i < m->dimY; i++) {
+                for (int j = 0; j < m->dimX; j++) {
+                    float v = matcoo_get(m, i, j);
+                    fprintf(f, "%.2f ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_free(m);
     } else {
         matcoo_i *m = matcoo_i_fromfile(filepath);
         timer_start();
         m = matcoo_i_sm(m, a);
-        printf("Scalar multiplication completed as int in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Scalar multiplication completed as int in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_i_print(m);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("sm"), "w");
+            fprintf(f, "sm %.2f\n", a);
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "int\n");
+            fprintf(f, "%d\n", m->dimX);
+            fprintf(f, "%d\n", m->dimY);
+            for (int i = 0; i < m->dimY; i++) {
+                for (int j = 0; j < m->dimX; j++) {
+                    int v = matcoo_i_get(m, i, j);
+                    fprintf(f, "%d ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_i_free(m);
     }
 }
 
-int run_tr(char *filepath, bool print_result) {
+// runs the trace operation
+void run_tr(char *filepath, bool should_print, bool should_log, int thread_count) {
     if (is_float(filepath)) {
         matcoo *m = matcoo_fromfile(filepath);
         timer_start();
         float t = matcoo_trace(m);
-        printf("Trace completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Trace completed as float in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             printf("trace = %.2f\n", t);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("tr"), "w");
+            fprintf(f, "tr\n");
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%.4f\n", t);
+            fprintf(f, "%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_free(m);
     } else {
         matcoo_i *m = matcoo_i_fromfile(filepath);
         timer_start();
         int t = matcoo_i_trace(m);
-        printf("Trace (i) completed as int in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Trace completed as int in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             printf("trace = %d\n", t);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("tr"), "w");
+            fprintf(f, "tr\n");
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "int\n");
+            fprintf(f, "%d\n", t);
+            fprintf(f, "%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_i_free(m);
     }
 }
 
-int run_ad(char *filepath1, char *filepath2, bool print_result) {
+// runs the add operation
+void run_ad(char *filepath1, char *filepath2, bool should_print, bool should_log, int thread_count) {
     if (is_float(filepath1)) {
         matcoo *m1 = matcoo_fromfile(filepath1);
         matcoo *m2 = matcoo_fromfile(filepath2);
+        if (m1->dimX != m2->dimX || m1->dimY != m2->dimY) {
+            printf("Error: Matrices must be of the same rank for operation addition.\n");
+            exit(EXIT_FAILURE);
+        }
         timer_start();
         matcoo *mres = matcoo_add(m1, m2);
-        printf("Add completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Add completed as float in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_print(mres);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("ad"), "w");
+            fprintf(f, "add\n");
+            fprintf(f, "%s\n", filepath1);
+            fprintf(f, "%s\n", filepath2);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    float v = matcoo_get(mres, i, j);
+                    fprintf(f, "%.2f ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_free(m1);
         matcoo_free(m2);
     } else {
         matcoo_i *m1 = matcoo_i_fromfile(filepath1);
         matcoo_i *m2 = matcoo_i_fromfile(filepath2);
+        if (m1->dimX != m2->dimX || m1->dimY != m2->dimY) {
+            printf("Error: Matrices must be of the same rank for operation addition.\n");
+            exit(EXIT_FAILURE);
+        }
         timer_start();
         matcoo_i *mres = matcoo_i_add(m1, m2);
-        printf("Add completed as int in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Add completed as int in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_i_print(mres);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("ad"), "w");
+            fprintf(f, "add\n");
+            fprintf(f, "%s\n", filepath1);
+            fprintf(f, "%s\n", filepath2);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "int\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    int v = matcoo_i_get(mres, i, j);
+                    fprintf(f, "%d ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_i_free(m1);
         matcoo_i_free(m2);
     }
 }
 
-int run_ts(char *filepath, bool print_result) {
+// runs the transpose operation
+void run_ts(char *filepath, bool should_print, bool should_log, int thread_count) {
     if (is_float(filepath)) {
         matcoo *m = matcoo_fromfile(filepath);
         timer_start();
         matcoo *mres = matcoo_transpose(m);
-        printf("Transpose completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Transpose completed as float in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_print(mres);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("ts"), "w");
+            fprintf(f, "ts\n");
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    float v = matcoo_get(mres, i, j);
+                    fprintf(f, "%.2f ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_free(m);
     } else {
         matcoo_i *m = matcoo_i_fromfile(filepath);
         timer_start();
         matcoo_i *mres = matcoo_i_transpose(m);
-        printf("Transpose completed as int in %.4fs\n", timer_end());
-        if (print_result) {
+        double elapsed = timer_end();
+        printf("Transpose completed as int in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_i_print(mres);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("ts"), "w");
+            fprintf(f, "ts\n");
+            fprintf(f, "%s\n", filepath);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    float v = matcoo_i_get(mres, i, j);
+                    fprintf(f, "%.2f ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcoo_i_free(m);
     }
 }
 
-int run_mm(char *filepath1, char *filepath2, bool print_result) {
+// runs the multiplication operation
+void run_mm(char *filepath1, char *filepath2, bool should_print, bool should_log, int thread_count) {
     if (is_float(filepath1)) {
         matcsr *m1 = matcsr_fromfile(filepath1);
         matcsc *m2 = matcsc_fromfile(filepath2);
+
+        if (m1->dimX != m2->dimY) {
+            printf("Multiplication is only defined for two matrices where A.dimX == B.dimY\n");
+            exit(EXIT_FAILURE);
+        }
+
         timer_start();
-        matcoo *mres = mat_multiply(m1, m2);
-        printf("Multiplication completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        matcoo *mres = mat_multiply(m1, m2, thread_count);
+        double elapsed = timer_end();
+        printf("Multiplication completed as float in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_print(mres);
         }
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("mm"), "w");
+            fprintf(f, "mm\n");
+            fprintf(f, "%s\n", filepath1);
+            fprintf(f, "%s\n", filepath2);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "float\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    float v = matcoo_get(mres, i, j);
+                    fprintf(f, "%.2f ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
+
         matcsr_free(m1);
         matcsc_free(m2);
     } else {
         matcsr_i *m1 = matcsr_i_fromfile(filepath1);
         matcsc_i *m2 = matcsc_i_fromfile(filepath2);
+
+        if (m1->dimX != m2->dimY) {
+            printf("Multiplication is only defined for two matrices where A.dimX == B.dimY\n");
+            exit(EXIT_FAILURE);
+        }
+
         timer_start();
-        matcoo_i *mres = mat_multiply_i(m1, m2);
-        printf("Multiplication completed as float in %.4fs\n", timer_end());
-        if (print_result) {
+        matcoo_i *mres = mat_multiply_i(m1, m2, thread_count);
+        double elapsed = timer_end();
+        printf("Multiplication completed as int in %.4fs using %d threads.\n", elapsed, thread_count);
+        if (should_print) {
             matcoo_i_print(mres);
         }
-        matcsr_i_free(m1);
-        matcsc_i_free(m2);
+
+        if (should_log) {
+            FILE *f = fopen(get_log_name("mm"), "w");
+            fprintf(f, "mm\n");
+            fprintf(f, "%s\n", filepath1);
+            fprintf(f, "%s\n", filepath2);
+            fprintf(f, "%d\n", thread_count);
+            fprintf(f, "int\n");
+            fprintf(f, "%d\n", mres->dimX);
+            fprintf(f, "%d\n", mres->dimY);
+            for (int i = 0; i < mres->dimY; i++) {
+                for (int j = 0; j < mres->dimX; j++) {
+                    int v = matcoo_i_get(mres, i, j);
+                    fprintf(f, "%d ", v);
+                }
+            }
+            fprintf(f, "\n%.4f\n", elapsed);
+            fclose(f);
+        }
     }
 }
 
-int print_usage() {
+void print_usage() {
     printf("Usage:\n"
            "\tOperations:\n"
            "\t--sm \tScalar multiplication\n"
@@ -862,12 +824,18 @@ int print_usage() {
 }
 
 int main(int argc, char *argv[]) {
+
+    //test_correctness("data/float123.in", "data/float123.in");
+
     // gather info about the arguments
     char operation = '0';
     int file_count = 1;
     char *file1 = NULL;
     char *file2 = NULL;
-    bool print_result = false;
+    float scalar;
+    bool should_print = false;
+    bool should_log = false;
+    int thread_count = 8;
     // scalar multiplication
     if (argc < 2) {
         print_usage();
@@ -877,6 +845,7 @@ int main(int argc, char *argv[]) {
             char *v = argv[i];
             if (strcmp(v, "--sm") == 0) {
                 operation = 's';
+                scalar = strtod(argv[++i], NULL); // if the next arg is a file, then its not an option
             } else if (strcmp(v, "--tr") == 0) {
                 operation = 'r';
             } else if (strcmp(v, "--ad") == 0) {
@@ -893,7 +862,11 @@ int main(int argc, char *argv[]) {
                     file2 = argv[++i]; // handle a second file
                 }
             } else if (strcmp(v, "-p") == 0) {
-                print_result = true;
+                should_print = true;
+            } else if (strcmp(v, "-l") == 0) {
+                should_log = true;
+            } else if (strcmp(v, "-t") == 0) {
+                thread_count = (int) strtol(argv[++i], NULL, 10); // if the next arg is a file, then its not an option
             }
         }
     }
@@ -909,19 +882,19 @@ int main(int argc, char *argv[]) {
     // run an operation based on the arguments
     switch (operation) {
         case 's':
-            run_sm(file1, 2, print_result);
+            run_sm(file1, scalar, should_print, should_log, thread_count);
             break;
         case 'r':
-            run_tr(file1, print_result);
+            run_tr(file1, should_print, should_log, thread_count);
             break;
         case 'a':
-            run_ad(file1, file2, print_result);
+            run_ad(file1, file2, should_print, should_log, thread_count);
             break;
         case 't':
-            run_ts(file1, print_result);
+            run_ts(file1, should_print, should_log, thread_count);
             break;
         case 'm':
-            run_mm(file1, file2, print_result);
+            run_mm(file1, file2, should_print, should_log, thread_count);
             break;
         default:
             print_usage();

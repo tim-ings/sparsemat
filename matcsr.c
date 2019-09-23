@@ -97,8 +97,10 @@ void matcsr_print(matcsr *m) {
     }
 }
 
-matcsr *matcsr_sm(matcsr *m, float s) {
-    for (int i = 0; i < m->nnz->length; i++) {
+matcsr *matcsr_sm(matcsr *m, const float s, int thread_count) {
+    int i;
+#pragma omp parallel for num_threads(thread_count) private(i) shared(m,s ) default(none)
+    for (i = 0; i < m->nnz->length; i++) {
         int pi = i / m->nnz->increment; // part index, int division floors result
         int si = i - (m->nnz->increment * pi); // sub index, the index within the part
         m->nnz->parts[pi][si] *= s;
