@@ -91,7 +91,7 @@ void matcsr_print(matcsr *m) {
     for (int i = 0; i < m->dimY; i++) {
         int found = 0;
         for (int j = 0; j < m->dimX; j++) {
-            printf("%.2f\t\t", matcsr_get(m, i, j, found));
+            printf("%.2f\t\t", matcsr_get(m, i, j, &found));
         }
         printf("\n");
     }
