@@ -180,13 +180,11 @@ bool matcoo_equals(matcoo* m1, matcoo* m2) {
     if (m1->dimX != m2->dimX || m1->dimY != m2->dimY) {
         return false;
     }
-
     for (int i = 0; i < m1->dimY; i++) {
         for (int j = 0; j < m1->dimX; j++) {
             float v1 = matcoo_get(m1, i, j);
             float v2 = matcoo_get(m2, i, j);
             if (v1 != v2) {
-                printf("Found diff when comparing 2 coo mats:\n");
                 return false;
             }
         }

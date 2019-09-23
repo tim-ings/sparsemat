@@ -64,9 +64,9 @@ bool compare_coo_csc(matcoo *mcoo, matcsc *mcsc) {
         return false; // mats must have same rank to be equal
     }
     // check all the elements
-    for (int j = 0; j < mcoo->dimX; j++) {
+    for (int i = 0; i < mcoo->dimY; i++) {
         int f2 = 0;
-        for (int i = 0; i < mcoo->dimY; i++) {
+        for (int j = 0; j < mcoo->dimX; j++) {
             float v1 = matcoo_get(mcoo, i, j);
             float v2 = matcsc_get(mcsc, j, i, &f2);
             if (v1 != v2) {
@@ -259,15 +259,13 @@ matcoo *mat_multiply(matcsr *m1, matcsc *m2) {
     }
     matcoo *mres = matcoo_zeroes(m2->dimX, m1->dimY);
     int i;
-#pragma omp parallel for num_threads(16) private(i) shared(mres, m1, m2) default(none) collapse(2)
+//#pragma omp parallel for num_threads(16) private(i, found1, found2) shared(mres, m1, m2) default(none) collapse(2)
     for (i = 0; i < mres->dimY; i++) {
         for (int j = 0; j < mres->dimX; j++) {
             float sum = 0.0f;
-            int found1 = 0;
-            int found2 = 0;
             for (int k = 0; k < m1->dimX; k++) {
-                float v1 = matcsr_get(m1, i, k, &found1);
-                float v2 = matcsc_get(m2, j, k, &found2);
+                float v1 = matcsr_get(m1, i, k, 0);
+                float v2 = matcsc_get(m2, j, k, 0);
                 sum += v1 * v2;
             }
             matcoo_build(mres, sum, i, j);
@@ -673,6 +671,9 @@ int time_csr_float(const char *f1, const char *f2) {
     printf("CSR x CSC multiply: %.4f\n", timer_end());
 //    matcsr_free(mm_csr);
 //    matcsc_free(mm_csc);
+
+
+    printf("CSR FLOAT PASSED ALL TESTS\n");
     return 0;
 }
 
@@ -714,52 +715,100 @@ int time_csr_int(const char *f1, const char *f2) {
     printf("CSR INT x CSC multiply: %.4f\n", timer_end());
 //    matcsr_i_free(mm_csr);
 //    matcsc_i_free(mm_csc);
+
+    printf("CSR INT PASSED ALL TESTS\n");
     return 0;
 }
 
-int time_csc(const char *f1, const char *f2) {
-    // load
-    timer_start();
-    matcsc *m_init = matcsc_fromfile(f1);
-    printf("CSC Load: %.4f\n", timer_end());
-    matcsc_free(m_init);
+bool is_float(char* filepath) {
+    char line[10];
+    FILE *fp = fopen(filepath, "r");
+    if (fp) {
+        fgets(line, 10, fp);
+        printf("Data from the file:\n%s", line);
+        fclose(fp);
+    }
+}
 
-    // scalar multiplication
-    matcsc *m_sm = matcsc_fromfile(f1);
-    timer_start();
-    matcsc *m_sm_res = matcsc_sm(m_sm, 2);
-    printf("CSC sm: %.4f\n", timer_end());
-    matcsc_free(m_sm_res);
+int run_sm(char* filepath) {
+    if (is_float(filepath)) {
+        matcoo *m = matcoo_fromfile(filepath);
+        timer_start();
+        m = matcoo_sm(m, 2);
+        printf("Operation completed in %.4fs\n", timer_end());
+        matcoo_print(m);
+        matcoo_free(m);
+    } else {
+        matcoo_i *m = matcoo_i_fromfile(filepath);
+        timer_start();
+        m = matcoo_i_sm(m, 2);
+        printf("Operation completed in %.4fs\n", timer_end());
+        matcoo_i_print(m);
+//        matcsr_i_free(m);
+    }
+}
 
-    // trace
-    matcsc *m_trace = matcsc_fromfile(f1);
-    timer_start();
-    matcsc_trace(m_trace);
-    printf("CSC trace: %.4f\n", timer_end());
-    matcsc_free(m_trace);
-
-    // add
-    matcsc *m_add1 = matcsc_fromfile(f1);
-    matcsc *m_add2 = matcsc_fromfile(f2);
-    timer_start();
-    matcsc *m_add_res = matcsc_add(m_add1, m_add2);
-    printf("CSC add: %.4f\n", timer_end());
-    matcsc_free(m_add_res);
-    matcsc_free(m_add2);
-    return 0;
+int print_usage() {
+    printf("Usage:\n"
+           "\t--sm \tScalar multiplication\n"
+           "\t--tr \tTrace\n"
+           "\t--ad \tAddition\n"
+           "\t--ts \tTranspose\n"
+           "\t--mm \tMatrix multiplication\n");
 }
 
 int main(int argc, char *argv[]) {
-    const char *f1 = "data/float123.in";
-    const char *f2 = "data/float123.in";
-    test_all_float(f1, f2);
+    char operation = '0';
+    int file_count = 1;
+    char* file1 = NULL;
+    char* file2 = NULL;
+    // scalar multiplication
+    if (argc < 2) {
+        print_usage();
+    } else {
+        // go over every arg
+        for (int i = 0; i < argc; i++) {
+            char* v = argv[i];
+            if (strcmp(v, "--sm") == 0) {
+                operation = 's';
+            } else if (strcmp(v, "--tr") == 0) {
+                operation = 'r';
+            } else if (strcmp(v, "--ad") == 0) {
+                operation = 'a';
+                file_count = 2;
+            } else if (strcmp(v, "--ts") == 0) {
+                operation = 't';
+            } else if (strcmp(v, "--mm") == 0) {
+                operation = 'm';
+                file_count = 2;
+            } else if (strcmp(v, "-f") == 0) {
+                file1 = argv[i + 1];
+                if (file_count > 1) {
+                    file2 = argv[i + 2];
+                }
+            }
+        }
+    }
+    if (file_count == 2) {
+        printf("Running operation %c on %d files: %s and %s\n", operation, file_count, file1, file2);
+    } else {
+        printf("Running operation %c on %d files: %s\n", operation, file_count, file1);
+    }
+    switch (operation) {
+        case 's':
+            run_sm(file1);
+            break;
+        default:
+            break;
+    }
 
-//    time_coo("data/float64.in", "data/float64.in");
-//    printf("\n");
-    time_csr_float("data/float256.in", "data/float256.in");
-    time_csr_int("data/int256.in", "data/int256.in");
-//    printf("\n");
-//    time_csc("data/float128.in", "data/float128.in");
+
+//    const char *f1 = "data/float123.in";
+//    const char *f2 = "data/float123.in";
+//    test_all_float(f1, f2);
+//
+//    time_csr_float("data/float256.in", "data/float256.in");
+//    time_csr_int("data/int256.in", "data/int256.in");
 
     return EXIT_SUCCESS;
 }
