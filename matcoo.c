@@ -180,18 +180,16 @@ bool matcoo_equals(matcoo* m1, matcoo* m2) {
     if (m1->dimX != m2->dimX || m1->dimY != m2->dimY) {
         return false;
     }
-    ll_float_node *v1 = m1->vals->first;
-    ll_float_node *i1 = m1->is->first;
-    ll_float_node *j1 = m1->js->first;
-    ll_float_node *v2 = m2->vals->first;
-    ll_float_node *i2 = m2->is->first;
-    ll_float_node *j2 = m2->js->first;
-    while (v1 && v2) {
-        if (v1->value != v2->value) {
-            return false;
+
+    for (int i = 0; i < m1->dimY; i++) {
+        for (int j = 0; j < m1->dimX; j++) {
+            float v1 = matcoo_get(m1, i, j);
+            float v2 = matcoo_get(m2, i, j);
+            if (v1 != v2) {
+                printf("Found diff when comparing 2 coo mats:\n");
+                return false;
+            }
         }
-        _matcoo_itt_next(&v1, &i1, &j1);
-        _matcoo_itt_next(&v2, &i2, &j2);
     }
     return true;
 }

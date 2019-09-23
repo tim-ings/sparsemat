@@ -4,27 +4,51 @@
 CMakeFiles/sparsemat.dir/list.c.o: ../list.c
 CMakeFiles/sparsemat.dir/list.c.o: ../list.h
 
+CMakeFiles/sparsemat.dir/list_i.c.o: ../list_i.c
+CMakeFiles/sparsemat.dir/list_i.c.o: ../list_i.h
+
 CMakeFiles/sparsemat.dir/ll_float.c.o: ../ll_float.c
 CMakeFiles/sparsemat.dir/ll_float.c.o: ../ll_float.h
 
+CMakeFiles/sparsemat.dir/ll_int.c.o: ../ll_int.c
+CMakeFiles/sparsemat.dir/ll_int.c.o: ../ll_int.h
+
 CMakeFiles/sparsemat.dir/main.c.o: ../list.h
+CMakeFiles/sparsemat.dir/main.c.o: ../list_i.h
 CMakeFiles/sparsemat.dir/main.c.o: ../ll_float.h
+CMakeFiles/sparsemat.dir/main.c.o: ../ll_int.h
 CMakeFiles/sparsemat.dir/main.c.o: ../main.c
 CMakeFiles/sparsemat.dir/main.c.o: ../matcoo.h
+CMakeFiles/sparsemat.dir/main.c.o: ../matcoo_i.h
 CMakeFiles/sparsemat.dir/main.c.o: ../matcsc.h
+CMakeFiles/sparsemat.dir/main.c.o: ../matcsc_i.h
 CMakeFiles/sparsemat.dir/main.c.o: ../matcsr.h
+CMakeFiles/sparsemat.dir/main.c.o: ../matcsr_i.h
 
 CMakeFiles/sparsemat.dir/matcoo.c.o: ../ll_float.h
 CMakeFiles/sparsemat.dir/matcoo.c.o: ../matcoo.c
 CMakeFiles/sparsemat.dir/matcoo.c.o: ../matcoo.h
+
+CMakeFiles/sparsemat.dir/matcoo_i.c.o: ../ll_int.h
+CMakeFiles/sparsemat.dir/matcoo_i.c.o: ../matcoo_i.c
+CMakeFiles/sparsemat.dir/matcoo_i.c.o: ../matcoo_i.h
 
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../list.h
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../ll_float.h
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../matcsc.c
 CMakeFiles/sparsemat.dir/matcsc.c.o: ../matcsc.h
 
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: ../list_i.h
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: ../ll_int.h
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: ../matcsc_i.c
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: ../matcsc_i.h
+
 CMakeFiles/sparsemat.dir/matcsr.c.o: ../list.h
 CMakeFiles/sparsemat.dir/matcsr.c.o: ../ll_float.h
 CMakeFiles/sparsemat.dir/matcsr.c.o: ../matcsr.c
 CMakeFiles/sparsemat.dir/matcsr.c.o: ../matcsr.h
+
+CMakeFiles/sparsemat.dir/matcsr_i.c.o: ../list_i.h
+CMakeFiles/sparsemat.dir/matcsr_i.c.o: ../matcsr_i.c
+CMakeFiles/sparsemat.dir/matcsr_i.c.o: ../matcsr_i.h
 

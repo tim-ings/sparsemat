@@ -4,27 +4,51 @@
 CMakeFiles/sparsemat.dir/list.c.o
  /Users/tim/repo/sparsemat/list.c
  /Users/tim/repo/sparsemat/list.h
+CMakeFiles/sparsemat.dir/list_i.c.o
+ /Users/tim/repo/sparsemat/list_i.c
+ /Users/tim/repo/sparsemat/list_i.h
 CMakeFiles/sparsemat.dir/ll_float.c.o
  /Users/tim/repo/sparsemat/ll_float.c
  /Users/tim/repo/sparsemat/ll_float.h
+CMakeFiles/sparsemat.dir/ll_int.c.o
+ /Users/tim/repo/sparsemat/ll_int.c
+ /Users/tim/repo/sparsemat/ll_int.h
 CMakeFiles/sparsemat.dir/main.c.o
  /Users/tim/repo/sparsemat/list.h
+ /Users/tim/repo/sparsemat/list_i.h
  /Users/tim/repo/sparsemat/ll_float.h
+ /Users/tim/repo/sparsemat/ll_int.h
  /Users/tim/repo/sparsemat/main.c
  /Users/tim/repo/sparsemat/matcoo.h
+ /Users/tim/repo/sparsemat/matcoo_i.h
  /Users/tim/repo/sparsemat/matcsc.h
+ /Users/tim/repo/sparsemat/matcsc_i.h
  /Users/tim/repo/sparsemat/matcsr.h
+ /Users/tim/repo/sparsemat/matcsr_i.h
 CMakeFiles/sparsemat.dir/matcoo.c.o
  /Users/tim/repo/sparsemat/ll_float.h
  /Users/tim/repo/sparsemat/matcoo.c
  /Users/tim/repo/sparsemat/matcoo.h
+CMakeFiles/sparsemat.dir/matcoo_i.c.o
+ /Users/tim/repo/sparsemat/ll_int.h
+ /Users/tim/repo/sparsemat/matcoo_i.c
+ /Users/tim/repo/sparsemat/matcoo_i.h
 CMakeFiles/sparsemat.dir/matcsc.c.o
  /Users/tim/repo/sparsemat/list.h
  /Users/tim/repo/sparsemat/ll_float.h
  /Users/tim/repo/sparsemat/matcsc.c
  /Users/tim/repo/sparsemat/matcsc.h
+CMakeFiles/sparsemat.dir/matcsc_i.c.o
+ /Users/tim/repo/sparsemat/list_i.h
+ /Users/tim/repo/sparsemat/ll_int.h
+ /Users/tim/repo/sparsemat/matcsc_i.c
+ /Users/tim/repo/sparsemat/matcsc_i.h
 CMakeFiles/sparsemat.dir/matcsr.c.o
  /Users/tim/repo/sparsemat/list.h
  /Users/tim/repo/sparsemat/ll_float.h
  /Users/tim/repo/sparsemat/matcsr.c
  /Users/tim/repo/sparsemat/matcsr.h
+CMakeFiles/sparsemat.dir/matcsr_i.c.o
+ /Users/tim/repo/sparsemat/list_i.h
+ /Users/tim/repo/sparsemat/matcsr_i.c
+ /Users/tim/repo/sparsemat/matcsr_i.h

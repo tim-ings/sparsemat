@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdbool.h>
 
+
 typedef struct matcoo_ matcoo;
 struct matcoo_ {
     ll_float *vals;

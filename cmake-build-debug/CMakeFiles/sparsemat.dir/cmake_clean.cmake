@@ -5,6 +5,11 @@ file(REMOVE_RECURSE
   "CMakeFiles/sparsemat.dir/matcoo.c.o"
   "CMakeFiles/sparsemat.dir/matcsc.c.o"
   "CMakeFiles/sparsemat.dir/list.c.o"
+  "CMakeFiles/sparsemat.dir/matcoo_i.c.o"
+  "CMakeFiles/sparsemat.dir/ll_int.c.o"
+  "CMakeFiles/sparsemat.dir/matcsr_i.c.o"
+  "CMakeFiles/sparsemat.dir/list_i.c.o"
+  "CMakeFiles/sparsemat.dir/matcsc_i.c.o"
   "sparsemat.pdb"
   "sparsemat"
 )

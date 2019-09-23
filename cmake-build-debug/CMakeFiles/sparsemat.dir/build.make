@@ -135,6 +135,71 @@ CMakeFiles/sparsemat.dir/list.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/list.c.s"
 	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/list.c -o CMakeFiles/sparsemat.dir/list.c.s
 
+CMakeFiles/sparsemat.dir/matcoo_i.c.o: CMakeFiles/sparsemat.dir/flags.make
+CMakeFiles/sparsemat.dir/matcoo_i.c.o: ../matcoo_i.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/sparsemat.dir/matcoo_i.c.o"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/sparsemat.dir/matcoo_i.c.o   -c /Users/tim/repo/sparsemat/matcoo_i.c
+
+CMakeFiles/sparsemat.dir/matcoo_i.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sparsemat.dir/matcoo_i.c.i"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/tim/repo/sparsemat/matcoo_i.c > CMakeFiles/sparsemat.dir/matcoo_i.c.i
+
+CMakeFiles/sparsemat.dir/matcoo_i.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/matcoo_i.c.s"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/matcoo_i.c -o CMakeFiles/sparsemat.dir/matcoo_i.c.s
+
+CMakeFiles/sparsemat.dir/ll_int.c.o: CMakeFiles/sparsemat.dir/flags.make
+CMakeFiles/sparsemat.dir/ll_int.c.o: ../ll_int.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/sparsemat.dir/ll_int.c.o"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/sparsemat.dir/ll_int.c.o   -c /Users/tim/repo/sparsemat/ll_int.c
+
+CMakeFiles/sparsemat.dir/ll_int.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sparsemat.dir/ll_int.c.i"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/tim/repo/sparsemat/ll_int.c > CMakeFiles/sparsemat.dir/ll_int.c.i
+
+CMakeFiles/sparsemat.dir/ll_int.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/ll_int.c.s"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/ll_int.c -o CMakeFiles/sparsemat.dir/ll_int.c.s
+
+CMakeFiles/sparsemat.dir/matcsr_i.c.o: CMakeFiles/sparsemat.dir/flags.make
+CMakeFiles/sparsemat.dir/matcsr_i.c.o: ../matcsr_i.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/sparsemat.dir/matcsr_i.c.o"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/sparsemat.dir/matcsr_i.c.o   -c /Users/tim/repo/sparsemat/matcsr_i.c
+
+CMakeFiles/sparsemat.dir/matcsr_i.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sparsemat.dir/matcsr_i.c.i"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/tim/repo/sparsemat/matcsr_i.c > CMakeFiles/sparsemat.dir/matcsr_i.c.i
+
+CMakeFiles/sparsemat.dir/matcsr_i.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/matcsr_i.c.s"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/matcsr_i.c -o CMakeFiles/sparsemat.dir/matcsr_i.c.s
+
+CMakeFiles/sparsemat.dir/list_i.c.o: CMakeFiles/sparsemat.dir/flags.make
+CMakeFiles/sparsemat.dir/list_i.c.o: ../list_i.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/sparsemat.dir/list_i.c.o"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/sparsemat.dir/list_i.c.o   -c /Users/tim/repo/sparsemat/list_i.c
+
+CMakeFiles/sparsemat.dir/list_i.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sparsemat.dir/list_i.c.i"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/tim/repo/sparsemat/list_i.c > CMakeFiles/sparsemat.dir/list_i.c.i
+
+CMakeFiles/sparsemat.dir/list_i.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/list_i.c.s"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/list_i.c -o CMakeFiles/sparsemat.dir/list_i.c.s
+
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: CMakeFiles/sparsemat.dir/flags.make
+CMakeFiles/sparsemat.dir/matcsc_i.c.o: ../matcsc_i.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/sparsemat.dir/matcsc_i.c.o"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/sparsemat.dir/matcsc_i.c.o   -c /Users/tim/repo/sparsemat/matcsc_i.c
+
+CMakeFiles/sparsemat.dir/matcsc_i.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sparsemat.dir/matcsc_i.c.i"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/tim/repo/sparsemat/matcsc_i.c > CMakeFiles/sparsemat.dir/matcsc_i.c.i
+
+CMakeFiles/sparsemat.dir/matcsc_i.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sparsemat.dir/matcsc_i.c.s"
+	/usr/local/bin/gcc-9 $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/tim/repo/sparsemat/matcsc_i.c -o CMakeFiles/sparsemat.dir/matcsc_i.c.s
+
 # Object files for target sparsemat
 sparsemat_OBJECTS = \
 "CMakeFiles/sparsemat.dir/main.c.o" \
@@ -142,7 +207,12 @@ sparsemat_OBJECTS = \
 "CMakeFiles/sparsemat.dir/ll_float.c.o" \
 "CMakeFiles/sparsemat.dir/matcoo.c.o" \
 "CMakeFiles/sparsemat.dir/matcsc.c.o" \
-"CMakeFiles/sparsemat.dir/list.c.o"
+"CMakeFiles/sparsemat.dir/list.c.o" \
+"CMakeFiles/sparsemat.dir/matcoo_i.c.o" \
+"CMakeFiles/sparsemat.dir/ll_int.c.o" \
+"CMakeFiles/sparsemat.dir/matcsr_i.c.o" \
+"CMakeFiles/sparsemat.dir/list_i.c.o" \
+"CMakeFiles/sparsemat.dir/matcsc_i.c.o"
 
 # External object files for target sparsemat
 sparsemat_EXTERNAL_OBJECTS =
@@ -153,9 +223,14 @@ sparsemat: CMakeFiles/sparsemat.dir/ll_float.c.o
 sparsemat: CMakeFiles/sparsemat.dir/matcoo.c.o
 sparsemat: CMakeFiles/sparsemat.dir/matcsc.c.o
 sparsemat: CMakeFiles/sparsemat.dir/list.c.o
+sparsemat: CMakeFiles/sparsemat.dir/matcoo_i.c.o
+sparsemat: CMakeFiles/sparsemat.dir/ll_int.c.o
+sparsemat: CMakeFiles/sparsemat.dir/matcsr_i.c.o
+sparsemat: CMakeFiles/sparsemat.dir/list_i.c.o
+sparsemat: CMakeFiles/sparsemat.dir/matcsc_i.c.o
 sparsemat: CMakeFiles/sparsemat.dir/build.make
 sparsemat: CMakeFiles/sparsemat.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking C executable sparsemat"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/tim/repo/sparsemat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking C executable sparsemat"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sparsemat.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c99 -fopenmp")
 set(CMAKE_C_STANDARD 99)
 #find_package(OPENMP REQUIRED)
 
-add_executable(sparsemat main.c matcsr.c matcsr.h ll_float.c ll_float.h matcoo.c matcoo.h matcsc.c matcsc.h list.c list.h)
+add_executable(sparsemat main.c matcsr.c matcsr.h ll_float.c ll_float.h matcoo.c matcoo.h matcsc.c matcsc.h list.c list.h matcoo_i.c matcoo_i.h ll_int.c ll_int.h matcsr_i.c matcsr_i.h list_i.c list_i.h matcsc_i.c matcsc_i.h)
 
 
 message(STATUS "Checking OpenMP")

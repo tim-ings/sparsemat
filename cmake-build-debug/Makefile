@@ -150,6 +150,33 @@ list.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list.c.s
 .PHONY : list.c.s
 
+list_i.o: list_i.c.o
+
+.PHONY : list_i.o
+
+# target to build an object file
+list_i.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list_i.c.o
+.PHONY : list_i.c.o
+
+list_i.i: list_i.c.i
+
+.PHONY : list_i.i
+
+# target to preprocess a source file
+list_i.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list_i.c.i
+.PHONY : list_i.c.i
+
+list_i.s: list_i.c.s
+
+.PHONY : list_i.s
+
+# target to generate assembly for a file
+list_i.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/list_i.c.s
+.PHONY : list_i.c.s
+
 ll_float.o: ll_float.c.o
 
 .PHONY : ll_float.o
@@ -176,6 +203,33 @@ ll_float.s: ll_float.c.s
 ll_float.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_float.c.s
 .PHONY : ll_float.c.s
+
+ll_int.o: ll_int.c.o
+
+.PHONY : ll_int.o
+
+# target to build an object file
+ll_int.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_int.c.o
+.PHONY : ll_int.c.o
+
+ll_int.i: ll_int.c.i
+
+.PHONY : ll_int.i
+
+# target to preprocess a source file
+ll_int.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_int.c.i
+.PHONY : ll_int.c.i
+
+ll_int.s: ll_int.c.s
+
+.PHONY : ll_int.s
+
+# target to generate assembly for a file
+ll_int.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/ll_int.c.s
+.PHONY : ll_int.c.s
 
 main.o: main.c.o
 
@@ -231,6 +285,33 @@ matcoo.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo.c.s
 .PHONY : matcoo.c.s
 
+matcoo_i.o: matcoo_i.c.o
+
+.PHONY : matcoo_i.o
+
+# target to build an object file
+matcoo_i.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo_i.c.o
+.PHONY : matcoo_i.c.o
+
+matcoo_i.i: matcoo_i.c.i
+
+.PHONY : matcoo_i.i
+
+# target to preprocess a source file
+matcoo_i.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo_i.c.i
+.PHONY : matcoo_i.c.i
+
+matcoo_i.s: matcoo_i.c.s
+
+.PHONY : matcoo_i.s
+
+# target to generate assembly for a file
+matcoo_i.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcoo_i.c.s
+.PHONY : matcoo_i.c.s
+
 matcsc.o: matcsc.c.o
 
 .PHONY : matcsc.o
@@ -257,6 +338,33 @@ matcsc.s: matcsc.c.s
 matcsc.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc.c.s
 .PHONY : matcsc.c.s
+
+matcsc_i.o: matcsc_i.c.o
+
+.PHONY : matcsc_i.o
+
+# target to build an object file
+matcsc_i.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc_i.c.o
+.PHONY : matcsc_i.c.o
+
+matcsc_i.i: matcsc_i.c.i
+
+.PHONY : matcsc_i.i
+
+# target to preprocess a source file
+matcsc_i.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc_i.c.i
+.PHONY : matcsc_i.c.i
+
+matcsc_i.s: matcsc_i.c.s
+
+.PHONY : matcsc_i.s
+
+# target to generate assembly for a file
+matcsc_i.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsc_i.c.s
+.PHONY : matcsc_i.c.s
 
 matcsr.o: matcsr.c.o
 
@@ -285,6 +393,33 @@ matcsr.c.s:
 	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr.c.s
 .PHONY : matcsr.c.s
 
+matcsr_i.o: matcsr_i.c.o
+
+.PHONY : matcsr_i.o
+
+# target to build an object file
+matcsr_i.c.o:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr_i.c.o
+.PHONY : matcsr_i.c.o
+
+matcsr_i.i: matcsr_i.c.i
+
+.PHONY : matcsr_i.i
+
+# target to preprocess a source file
+matcsr_i.c.i:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr_i.c.i
+.PHONY : matcsr_i.c.i
+
+matcsr_i.s: matcsr_i.c.s
+
+.PHONY : matcsr_i.s
+
+# target to generate assembly for a file
+matcsr_i.c.s:
+	$(MAKE) -f CMakeFiles/sparsemat.dir/build.make CMakeFiles/sparsemat.dir/matcsr_i.c.s
+.PHONY : matcsr_i.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -297,21 +432,36 @@ help:
 	@echo "... list.o"
 	@echo "... list.i"
 	@echo "... list.s"
+	@echo "... list_i.o"
+	@echo "... list_i.i"
+	@echo "... list_i.s"
 	@echo "... ll_float.o"
 	@echo "... ll_float.i"
 	@echo "... ll_float.s"
+	@echo "... ll_int.o"
+	@echo "... ll_int.i"
+	@echo "... ll_int.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
 	@echo "... matcoo.o"
 	@echo "... matcoo.i"
 	@echo "... matcoo.s"
+	@echo "... matcoo_i.o"
+	@echo "... matcoo_i.i"
+	@echo "... matcoo_i.s"
 	@echo "... matcsc.o"
 	@echo "... matcsc.i"
 	@echo "... matcsc.s"
+	@echo "... matcsc_i.o"
+	@echo "... matcsc_i.i"
+	@echo "... matcsc_i.s"
 	@echo "... matcsr.o"
 	@echo "... matcsr.i"
 	@echo "... matcsr.s"
+	@echo "... matcsr_i.o"
+	@echo "... matcsr_i.i"
+	@echo "... matcsr_i.s"
 .PHONY : help
 
 

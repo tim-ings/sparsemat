@@ -82,10 +82,22 @@
 		<Unit filename="/Users/tim/repo/sparsemat/list.h">
 			<Option target="sparsemat"/>
 		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/list_i.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/list_i.h">
+			<Option target="sparsemat"/>
+		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/ll_float.c">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/ll_float.h">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/ll_int.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/ll_int.h">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/main.c">
@@ -97,16 +109,34 @@
 		<Unit filename="/Users/tim/repo/sparsemat/matcoo.h">
 			<Option target="sparsemat"/>
 		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcoo_i.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcoo_i.h">
+			<Option target="sparsemat"/>
+		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/matcsc.c">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/matcsc.h">
 			<Option target="sparsemat"/>
 		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsc_i.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsc_i.h">
+			<Option target="sparsemat"/>
+		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/matcsr.c">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/matcsr.h">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsr_i.c">
+			<Option target="sparsemat"/>
+		</Unit>
+		<Unit filename="/Users/tim/repo/sparsemat/matcsr_i.h">
 			<Option target="sparsemat"/>
 		</Unit>
 		<Unit filename="/Users/tim/repo/sparsemat/CMakeLists.txt">

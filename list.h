@@ -29,6 +29,5 @@ void list_append(list **l, float val);
 void list_expand(list *l);
 
 void list_print(list *l);
-//void list_append(list* lst, float val);
 
 #endif
